@@ -5,7 +5,7 @@ What is it?
 -----------
 The collaborative music thing will comprise of a server - for synthesizing, and synchronising music; and a client - for collecting input from a user and for configuring and controlling the server. Each client will represent one 'instrument' - an instrument being a collection of oscillator, envelope, and effect settings. The client/server architecture will be designed with the assumption that it will only be used over LAN. This way, we can focus on one-way communication from client to server and we can make assumptions about latency that otherwise would pose problems.
 
-Most likely will depend on
+Depends on
 --------------------------
 - Fmod
 - QT
