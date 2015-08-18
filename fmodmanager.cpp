@@ -1,0 +1,38 @@
+#include "moc_fmodmanager.h"
+#include <iostream>
+
+static void cfmod(FMOD_RESULT result) {
+	if (result != FMOD_OK) {
+		std::cerr << "FMOD error! (" << result << ") " << FMOD_ErrorString(result) << std::endl;
+		throw "FMOD Error";
+	}
+}
+
+void FmodManager::run(){
+	cfmod(FMOD::System_Create(&system));
+
+	u32 version = 0;
+	cfmod(system->getVersion(&version));
+	if(version < FMOD_VERSION){
+		std::cerr 
+			<< "FMOD version of at least " << FMOD_VERSION 
+			<< " required. Version used " << version 
+			<< std::endl;
+		throw "FMOD Error";
+	}
+
+	cfmod(system->init(100, FMOD_INIT_NORMAL, nullptr));
+
+	running = true;
+	while(running){
+		cfmod(system->update());
+		msleep(30);
+	}
+
+	std::cout << "FmodManager stopped" << std::endl;
+	emit finished();
+}
+
+void FmodManager::kill(){
+	running = false;
+}

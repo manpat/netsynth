@@ -1,11 +1,13 @@
-INCLUDES  := -I/usr/include/qt4
+INCLUDES  := -I/usr/include/qt4 -I/home/patrick/Development/libraries/fmodstudio/api/lowlevel/inc
 CXXFLAGS  := -std=c++11 -Wall -DSERVER $(INCLUDES)
 LINKFLAGS := 
-LIBS := -lQtGui -lQtCore
+LIBS := -Wl,--rpath=lib -lQtGui -lQtCore lib/libfmod.so.6
 
 MOC := $(shell find . -name "moc_*")
 SRC := $(shell find . -name "*.cpp") $(MOC:%.h=%.cpp)
 OBJ := $(SRC:%.cpp=%.o)
+
+.PHONY: build
 
 build: $(OBJ)
 	@g++ $(LINKFLAGS) $^ $(LIBS) -obuild

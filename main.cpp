@@ -24,7 +24,6 @@ int main(int ac, char** av){
 		
 		App w;
 		w.resize(800, 600);
-		w.setWindowTitle("NetSynth");
 		w.show();
 
 		return a.exec();

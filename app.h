@@ -2,12 +2,12 @@
 #define APP_H
 
 #ifdef SERVER
-#	include "serverapp.h"
-	using App = ServerApp;
+#	include "serverlogic.h"
+	using App = ServerLogic;
 
 #else
-#	include "clientapp.h"
-	using App = ClientApp;
+#	include "clientlogic.h"
+	using App = ClientLogic;
 
 #endif
 
