@@ -8,18 +8,7 @@ The collaborative music thing will comprise of a server - for synthesizing, and 
 Most likely will depend on
 --------------------------
 - Fmod
-- SDL/SFML
-
-Things to look into
--------------------
-- We may need some kind of GUI library at somepoint
-    - Can be built ontop of SDL/SFML
-    - Can be dedicated - e.g. qt, gtk
-
-- Do we want to build a networking library from scratch or
-    do we want a separate library? Handmade means fewer 
-    dependencies but more work. May not be a huge problem
-    since our requirements aren't super complex
+- QT
 
 Things we need
 --------------
