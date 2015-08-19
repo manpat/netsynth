@@ -30,7 +30,7 @@ Instrument* InstrumentManager::NewInstrument(u32 id){
 	cfmod(fmod->playDSP(inst->dsp, nullptr /*channel group*/, false, &inst->channel));
 	////// END DSP
 
-	inst->noteScheduler = new NoteScheduler();
+	inst->scheduler = new NoteScheduler();
 	inst->envelopes[0].id = 0;
 	inst->envelopes[1].id = 1;
 
@@ -60,6 +60,21 @@ FMOD_RESULT F_CALLBACK InstrumentManager::GeneratorFunction(
 	void* ud = nullptr;
 	cfmod(thisdsp->getUserData(&ud));
 	auto& inst = *static_cast<Instrument*>(ud);
+
+	static bool go = false;
+	if(inst.phase > 4.1 && !go){
+		go = true;
+		inst.scheduler->NoteOff(128-12);
+		inst.scheduler->NoteOff(128-8);
+		inst.scheduler->NoteOff(128-1);
+		
+		inst.scheduler->quantisation = QuantisationSetting::Triplet;
+		inst.scheduler->NoteOn(128);
+		inst.scheduler->quantisation = QuantisationSetting::Quarter;
+		inst.scheduler->NoteOn(128-5);
+		inst.scheduler->quantisation = QuantisationSetting::Half;
+		inst.scheduler->NoteOn(128-12);
+	}
 
 	for(u32 i = 0; i < length; ++i){
 		outbuffer[i] = inst.Generate(inc);

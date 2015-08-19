@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 
 #include "envelope.h"
 #include "notescheduler.h"
@@ -32,7 +33,22 @@ f32 Envelope::Generate(f32 phase, NoteInfo& note){
 		}
 
 		case EnvelopeType::ADSR:{
-			throw "Not implemented";
+			auto rpos = phase - note.endTime;
+
+			if(position < attack){
+				return position/attack;
+
+			}else if(position-attack < decay){
+				return 1.0 - (position-attack)/decay *(1.0-sustain);
+
+			}else if(note.held()){
+				return sustain;
+
+			}else if(rpos < release){
+				return (1.0 - rpos/release)*sustain;
+			}
+
+			note.envFlags &= ~(1<<id);
 			return 0.0;
 		}
 	}

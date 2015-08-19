@@ -2,8 +2,8 @@
 #include <algorithm>
 #include <cmath>
 
-void NoteScheduler::Update(f32 ntime){
-	time = ntime;
+void NoteScheduler::Update(f32 t){
+	time = t; // TODO: Adjust for bpm here
 
 	auto end = notes.end();
 	auto nend = std::remove_if(notes.begin(), end, [](const NoteInfo& n){
@@ -14,7 +14,7 @@ void NoteScheduler::Update(f32 ntime){
 }
 
 static f32 snap(f32 v, f32 amt = 1.0){
-	return std::round(v / amt) * amt;
+	return std::ceil(v / amt) * amt;
 }
 
 void NoteScheduler::NoteOn(u8 note){
@@ -49,4 +49,13 @@ void NoteScheduler::NoteOff(u8 note){
 
 void NoteScheduler::Clear(){
 	notes.clear();
+}
+
+void NoteScheduler::ForEachActive(std::function<void (NoteInfo&)> func){
+	for(auto& ni: notes){
+		if(ni.beginTime > time) continue;
+		if(ni.dead()) continue;
+
+		func(ni);
+	}
 }

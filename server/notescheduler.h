@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include <vector>
+#include <functional>
 
 struct NoteInfo {
 	f32 beginTime;
@@ -30,11 +31,15 @@ struct NoteScheduler {
 	std::vector<NoteInfo> notes;
 	f32 time = 0.0;
 
-	void Update(f32 time);
+	void Update(f32 dt);
 
+	// note is in semitones
+	// 128 is A 220
 	void NoteOn(u8);
 	void NoteOff(u8);
 	void Clear();
+
+	void ForEachActive(std::function<void (NoteInfo&)>);
 };
 
 #endif
