@@ -15,13 +15,13 @@ struct NoteInfo;
 struct Envelope {
 	EnvelopeType type;
 	union {
-		float attack;
-		float dc;
+		f32 attack;
+		f32 dc;
 	};
 
-	float decay;
-	float sustain;
-	float release;
+	f32 decay;
+	f32 sustain;
+	f32 release;
 
 	f32 Generate(f32 phase, NoteInfo& note);
 };

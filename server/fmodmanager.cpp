@@ -32,7 +32,7 @@ void FmodManager::run(){
 	desc.numinputbuffers = 0;
 	desc.numoutputbuffers = 1;
 	desc.read = GeneratorFunction;
-	desc.userdata = new double;
+	desc.userdata = new f64;
 
 	FMOD::DSP* dsp; // This goes in an instrument (maybe)
 	FMOD::Channel* channel; // This goes in an instrument (definitely)
@@ -74,10 +74,16 @@ FMOD_RESULT F_CALLBACK FmodManager::GeneratorFunction(
 
 	void* ud = nullptr;
 	cfmod(thisdsp->getUserData(&ud));
-	auto& phase = *static_cast<double*>(ud);
+	auto& phase = *static_cast<f64*>(ud);
 
 	for(u32 i = 0; i < length; ++i){
-		outbuffer[i] = sin(phase*M_PI*2.0* 88.0) * std::min(std::log(phase*0.1 + 1.0), 1.0);
+		auto env = std::min(std::log(phase*0.5 + 1.0), 1.0);
+		f32 o = 0.0;
+		o += sin(phase*M_PI*2.0* 220.0);
+		o += sin(phase*M_PI*2.0* 220.0 * 4.0/3.0);
+		o += sin(phase*M_PI*2.0* 440.0);
+
+		outbuffer[i] = o * env / 3.0;
 		phase += inc;
 	}
 

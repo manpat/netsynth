@@ -7,7 +7,7 @@
 struct Instrument;
 
 struct InstrumentManager {
-	std::map<u32, Instrument*> clientInstruments;
+	std::map<u32, Instrument> clientInstruments;
 };
 
 #endif
