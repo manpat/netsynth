@@ -3,4 +3,8 @@
 
 #include "common.h"
 
+struct Instrument {
+
+};
+
 #endif
