@@ -23,8 +23,6 @@ int main(int ac, char** av){
 		a.setStyleSheet(css.data());
 		
 		App w;
-		w.resize(800, 600);
-		w.show();
 
 		return a.exec();
 		

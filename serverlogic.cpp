@@ -4,6 +4,8 @@
 
 ServerLogic::ServerLogic(){
 	setWindowTitle("Server");
+	resize(800, 600);
+	show();
 
 	fmodManager.start();
 }

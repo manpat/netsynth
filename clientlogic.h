@@ -1,11 +1,13 @@
 #ifndef CLIENTLOGIC_H
 #define CLIENTLOGIC_H
 
-#include <QtGui/QWidget>
 #include "common.h"
 
-class ClientLogic : public QWidget {
+class ClientGUI;
+
+class ClientLogic {
 protected:
+	ClientGUI* clientGUI;
 
 public:
 	ClientLogic();
