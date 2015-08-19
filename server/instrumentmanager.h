@@ -4,10 +4,22 @@
 #include "common.h"
 #include <map>
 
+#include <fmod.hpp>
+
 struct Instrument;
+class FmodManager;
 
 struct InstrumentManager {
-	std::map<u32, Instrument> clientInstruments;
+	FmodManager* fmodManager;
+	std::map<u32, Instrument*> clientInstruments;
+
+	Instrument* NewInstrument(u32);
+	void DestroyInstrument(u32);
+
+private:
+	static FMOD_RESULT F_CALLBACK GeneratorFunction(
+		FMOD_DSP_STATE*, f32*, f32*, u32, 
+		s32, s32*);
 };
 
 #endif

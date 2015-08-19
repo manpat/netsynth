@@ -5,10 +5,20 @@
 #include "oscillator.h"
 #include "envelope.h"
 
+#include <fmod.hpp>
+
+struct NoteScheduler;
+
 struct Instrument {
 	Oscillator oscillators[2];
 	Envelope envelopes[2];
 	f64 phase = 0;
+
+	FMOD::Channel* channel;
+	FMOD::DSP* dsp;
+	NoteScheduler* noteScheduler;
+
+	~Instrument();
 
 	f32 Generate(f64 dt);
 };

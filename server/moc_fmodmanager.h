@@ -1,6 +1,8 @@
 #ifndef FMOD_MANAGER_H
 #define FMOD_MANAGER_H
 
+#include <iostream>
+
 #include <QtCore/QThread>
 #include <QtCore/QMutex>
 
@@ -8,6 +10,8 @@
 #include <fmod_errors.h>
 
 #include "common.h"
+
+void cfmod(FMOD_RESULT result);
 
 class FmodSystemRef {
 	FMOD::System* system;
@@ -42,19 +46,16 @@ protected:
 	FMOD::System* system;
 	QMutex mutex;
 
-	bool running = true;
+	bool running = false;
 
 protected:
 	void run();
-
-	static FMOD_RESULT F_CALLBACK GeneratorFunction(
-		FMOD_DSP_STATE*, f32*, f32*, u32, 
-		s32, s32*);
 
 public:
 	void kill();
 
 	FmodSystemRef getSystem();
+	bool isRunning() const {return running;};
 
 };
 

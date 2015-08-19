@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cmath>
 
-static void cfmod(FMOD_RESULT result) {
+void cfmod(FMOD_RESULT result) {
 	if (result != FMOD_OK) {
 		std::cerr << "FMOD error! (" << result << ") " << FMOD_ErrorString(result) << std::endl;
 		throw "FMOD Error";
@@ -10,6 +10,8 @@ static void cfmod(FMOD_RESULT result) {
 }
 
 void FmodManager::run(){
+	running = false;
+	mutex.lock();
 	cfmod(FMOD::System_Create(&system));
 
 	u32 version = 0;
@@ -23,24 +25,7 @@ void FmodManager::run(){
 	}
 
 	cfmod(system->init(100, FMOD_INIT_NORMAL, nullptr));
-
-	///// BEGIN DSP
-	// One of these per instrument, maybe
-	FMOD_DSP_DESCRIPTION desc;
-	memset(&desc, 0, sizeof(desc));
-
-	desc.numinputbuffers = 0;
-	desc.numoutputbuffers = 1;
-	desc.read = GeneratorFunction;
-	desc.userdata = new f64;
-
-	FMOD::DSP* dsp; // This goes in an instrument (maybe)
-	FMOD::Channel* channel; // This goes in an instrument (definitely)
-	cfmod(system->createDSP(&desc, &dsp));
-	cfmod(dsp->setChannelFormat(FMOD_CHANNELMASK_MONO,1,FMOD_SPEAKERMODE_MONO));
-
-	cfmod(system->playDSP(dsp, nullptr /*channel group*/, false, &channel));
-	////// END DSP
+	mutex.unlock();
 
 	running = true;
 	while(running){
@@ -61,31 +46,4 @@ void FmodManager::kill(){
 FmodSystemRef FmodManager::getSystem(){
 	mutex.lock();
 	return FmodSystemRef{system, mutex};
-}
-
-FMOD_RESULT F_CALLBACK FmodManager::GeneratorFunction(
-	FMOD_DSP_STATE* state, f32*, f32* outbuffer, u32 length, s32, s32*){
-
-	s32 samplerate = 0;
-	cfmod(state->callbacks->getsamplerate(state, &samplerate));
-	f64 inc = 1.0/samplerate;
-
-	FMOD::DSP *thisdsp = (FMOD::DSP *)state->instance; 
-
-	void* ud = nullptr;
-	cfmod(thisdsp->getUserData(&ud));
-	auto& phase = *static_cast<f64*>(ud);
-
-	for(u32 i = 0; i < length; ++i){
-		auto env = std::min(std::log(phase*0.5 + 1.0), 1.0);
-		f32 o = 0.0;
-		o += sin(phase*M_PI*2.0* 220.0);
-		o += sin(phase*M_PI*2.0* 220.0 * 4.0/3.0);
-		o += sin(phase*M_PI*2.0* 440.0);
-
-		outbuffer[i] = o * env / 3.0;
-		phase += inc;
-	}
-
-	return FMOD_OK;
 }

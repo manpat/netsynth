@@ -4,7 +4,7 @@
 #include "common.h"
 
 enum class OscillatorWaveform {
-	Sine, Square, Triangle, Saw,
+	None = 0, Sine, Square, Triangle, Saw,
 };
 
 struct Oscillator {

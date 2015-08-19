@@ -3,7 +3,8 @@
 
 #include "common.h"
 
-enum class EnvelopeType {
+enum class EnvelopeType : u8 {
+	None = 0,
 	DC,
 	Linear, // Near instant onset, ignores everything but release
 	AR, // Ignores decay and sustain
@@ -14,6 +15,8 @@ struct NoteInfo;
 
 struct Envelope {
 	EnvelopeType type;
+	u8 id;
+	
 	union {
 		f32 attack;
 		f32 dc;
