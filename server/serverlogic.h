@@ -2,8 +2,9 @@
 #define SERVERLOGIC_H
 
 #include <QtGui/QWidget>
-#include "moc_fmodmanager.h"
 #include "common.h"
+#include "scale.h"
+#include "moc_fmodmanager.h"
 
 class InstrumentManager;
 
@@ -11,6 +12,7 @@ class ServerLogic : public QWidget {
 protected:
 	FmodManager fmodManager;
 	InstrumentManager* instrumentManager;
+	Scale scale;
 
 public:
 	ServerLogic();

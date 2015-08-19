@@ -19,8 +19,8 @@ struct NoteInfo {
 enum class QuantisationSetting {
 	None,
 	Sixteenth,
-	Eighth,
 	Triplet,
+	Eighth,
 	Quarter,
 	Half,
 	Whole,
@@ -35,7 +35,7 @@ struct NoteScheduler {
 
 	// note is in semitones
 	// 128 is A 220
-	void NoteOn(u8);
+	void NoteOn(u8, f32 = 0.0);
 	void NoteOff(u8);
 	void Clear();
 

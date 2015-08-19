@@ -62,18 +62,19 @@ FMOD_RESULT F_CALLBACK InstrumentManager::GeneratorFunction(
 	auto& inst = *static_cast<Instrument*>(ud);
 
 	static bool go = false;
-	if(inst.phase > 4.1 && !go){
+	if(inst.phase > 3.1 && !go){
 		go = true;
 		inst.scheduler->NoteOff(128-12);
 		inst.scheduler->NoteOff(128-8);
 		inst.scheduler->NoteOff(128-1);
 		
 		inst.scheduler->quantisation = QuantisationSetting::Triplet;
-		inst.scheduler->NoteOn(128);
-		inst.scheduler->quantisation = QuantisationSetting::Quarter;
-		inst.scheduler->NoteOn(128-5);
-		inst.scheduler->quantisation = QuantisationSetting::Half;
-		inst.scheduler->NoteOn(128-12);
+		inst.scheduler->NoteOn(128+7);
+		inst.scheduler->NoteOn(128+4, 0.4);
+		inst.scheduler->NoteOn(128, 0.8);
+		inst.scheduler->NoteOn(128-5, 1.0);
+		inst.scheduler->NoteOn(128-12, 1.5);
+		inst.scheduler->NoteOn(128-8, 2.0);
 	}
 
 	for(u32 i = 0; i < length; ++i){
