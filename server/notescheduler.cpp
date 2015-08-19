@@ -1,9 +1,10 @@
 #include "notescheduler.h"
+#include "serverlogic.h"
 #include <algorithm>
 #include <cmath>
 
 void NoteScheduler::Update(f32 t){
-	time = t; // TODO: Adjust for bpm here
+	time = t * ServerLogic::tempo / 60.0;
 
 	auto end = notes.end();
 	auto nend = std::remove_if(notes.begin(), end, [](const NoteInfo& n){

@@ -3,6 +3,9 @@
 #include "instrument.h"
 #include "notescheduler.h"
 
+Scale ServerLogic::scale;
+f32 ServerLogic::tempo = 60.0;
+
 ServerLogic::ServerLogic(){
 	setWindowTitle("Server");
 	resize(800, 600);

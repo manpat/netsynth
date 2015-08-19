@@ -4,10 +4,12 @@
 
 #include "envelope.h"
 #include "notescheduler.h"
+#include "serverlogic.h"
 
 f32 Envelope::Generate(f32 phase, NoteInfo& note){
 	if(!(note.envFlags & (1<<id))) return 0.0;
 	 
+	phase *= ServerLogic::tempo / 60.0;
 	auto position = phase - note.beginTime;
 
 	switch(type){

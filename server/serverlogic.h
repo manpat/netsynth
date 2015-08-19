@@ -12,7 +12,10 @@ class ServerLogic : public QWidget {
 protected:
 	FmodManager fmodManager;
 	InstrumentManager* instrumentManager;
-	Scale scale;
+	
+public:
+	static Scale scale;
+	static f32 tempo;
 
 public:
 	ServerLogic();

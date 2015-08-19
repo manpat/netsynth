@@ -62,7 +62,7 @@ FMOD_RESULT F_CALLBACK InstrumentManager::GeneratorFunction(
 	auto& inst = *static_cast<Instrument*>(ud);
 
 	static bool go = false;
-	if(inst.phase > 3.1 && !go){
+	if(inst.scheduler->time > 3.1 && !go){
 		go = true;
 		inst.scheduler->NoteOff(128-12);
 		inst.scheduler->NoteOff(128-8);
