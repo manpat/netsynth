@@ -2,6 +2,7 @@
 #define CLIENTLOGIC_H
 
 #include "common.h"
+#include "moc_clientnetwork.h"
 #include <QtCore/QObject>
 
 class ClientGUI;
@@ -12,6 +13,7 @@ class ClientLogic : QObject {
 protected:
 	ClientGUI* clientGUI;
 	ConnectDialog* connectDialog;
+	ClientNetwork* clientNetwork;
 
 public:
 	ClientLogic();
