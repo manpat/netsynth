@@ -6,6 +6,7 @@
 // #include <QtGui/QVBoxLayout>
 // #include <QtGui/QGridLayout>
 
+#include "argslot.h"
 #include "customdial.h"
 
 ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
@@ -37,25 +38,20 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			box->addWidget(oscDetune[i]);
 			box->addWidget(oscPulseWidth[i]);
 
-			auto oscbox = new QGroupBox(QString("Oscillator %1").arg(i));
-			oscbox->setLayout(box);
-			set->addWidget(oscbox);
-		};
+			connect(oscWaveforms[i], SIGNAL(valueChanged(int)), this, ARGSLOT(osc%1WaveformChange(int), i+1)));
+			connect(oscDetune[i], SIGNAL(valueChanged(int)), this, ARGSLOT(osc%1DetuneChange(int), i+1)));
+			connect(oscPulseWidth[i], SIGNAL(valueChanged(int)), this, ARGSLOT(osc%1PulseWidthChange(int), i+1)));
 
-		connect(oscWaveforms[0], SIGNAL(valueChanged(int)), this, SLOT(osc1WaveformChange(int)));
-		connect(oscWaveforms[1], SIGNAL(valueChanged(int)), this, SLOT(osc2WaveformChange(int)));
-		connect(oscDetune[0], SIGNAL(valueChanged(int)), this, SLOT(osc1DetuneChange(int)));
-		connect(oscDetune[1], SIGNAL(valueChanged(int)), this, SLOT(osc2DetuneChange(int)));
-		connect(oscPulseWidth[0], SIGNAL(valueChanged(int)), this, SLOT(osc1PulseWidthChange(int)));
-		connect(oscPulseWidth[1], SIGNAL(valueChanged(int)), this, SLOT(osc2PulseWidthChange(int)));
-
-		for(int i = 0; i < 2; i++){
 			oscWaveforms[i]->setValue(1);
 			oscWaveforms[i]->setValue(0);
 			oscDetune[i]->setValue(1);
 			oscDetune[i]->setValue(0);
 			oscPulseWidth[i]->setValue(50);
-		}
+
+			auto oscbox = new QGroupBox(QString("Oscillator %1").arg(i+1));
+			oscbox->setLayout(box);
+			set->addWidget(oscbox);
+		};
 
 		set->setContentsMargins(20, 20, 20, 20);
 		oscillatorTab->setLayout(set);
@@ -81,25 +77,16 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			box->addWidget(envSustain[i]);
 			box->addWidget(envRelease[i]);
 
-			auto oscbox = new QGroupBox(QString("Envelope %1").arg(i));
+			auto oscbox = new QGroupBox(QString("Envelope %1").arg(i+1));
 			oscbox->setLayout(box);
 			set->addWidget(oscbox);
-		};
 
-		connect(oscWaveforms[0], SIGNAL(valueChanged(int)), this, SLOT(osc1WaveformChange(int)));
-		connect(oscWaveforms[1], SIGNAL(valueChanged(int)), this, SLOT(osc2WaveformChange(int)));
-		connect(oscDetune[0], SIGNAL(valueChanged(int)), this, SLOT(osc1DetuneChange(int)));
-		connect(oscDetune[1], SIGNAL(valueChanged(int)), this, SLOT(osc2DetuneChange(int)));
-		connect(oscPulseWidth[0], SIGNAL(valueChanged(int)), this, SLOT(osc1PulseWidthChange(int)));
-		connect(oscPulseWidth[1], SIGNAL(valueChanged(int)), this, SLOT(osc2PulseWidthChange(int)));
-
-		for(int i = 0; i < 2; i++){
 			oscWaveforms[i]->setValue(1);
 			oscWaveforms[i]->setValue(0);
 			oscDetune[i]->setValue(1);
 			oscDetune[i]->setValue(0);
 			oscPulseWidth[i]->setValue(50);
-		}
+		};
 
 		set->setContentsMargins(20, 20, 20, 20);
 		envelopeTab->setLayout(set);

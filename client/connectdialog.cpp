@@ -20,6 +20,7 @@ ConnectDialog::ConnectDialog(QWidget* p)
 
 	input = new QLineEdit;
 	input->setValidator(new QRegExpValidator(QRegExp(R"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})")));
+	input->setText("127.0.0.1");
 
 	label->setBuddy(input);
 	connect(gobutton, SIGNAL(pressed()), this, SLOT(doConnect()));
