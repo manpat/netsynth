@@ -61,7 +61,7 @@ void AnalogDial::paintEvent(QPaintEvent*){
 
 	if(hover) p.setPen(QPen(color.lighter(120), 15));
 	else p.setPen(QPen(color, 15));
-	p.drawArc(r, startangle, -arcsize*value()/100);
+	p.drawArc(r, startangle, -arcsize*(value()-minimum())/(maximum()-minimum()));
 
 	r.adjust(20, 20,-20,-20);
 	auto font = p.font();

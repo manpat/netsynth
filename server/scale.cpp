@@ -12,6 +12,8 @@ void Scale::ConstructScale(Notes nroot, ScaleType type){
 		case ScaleType::Pentatonic:
 			count = 5;
 			break;
+
+		default: throw "Invalid scale";
 	}
 
 	if(degrees) delete[] degrees;
@@ -44,6 +46,8 @@ void Scale::ConstructScale(Notes nroot, ScaleType type){
 			degrees[i++] = root; root += 3; // 3
 			degrees[i++] = root; root += 2; // T
 			break;
+
+		case ScaleType::Count: throw "Invalid Scale";
 	}
 }
 

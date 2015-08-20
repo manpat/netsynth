@@ -1,20 +1,7 @@
 #ifndef SCALE_H
 #define SCALE_H
 
-#include "common.h"
-
-enum class ScaleType {
-	Major,
-	Minor,
-	Pentatonic,
-	// Blues
-	// Modes
-};
-
-enum class Notes : u8 {
-	A = 128, As, B, C, Cs, 
-	D, Ds, E, F, Fs, G, Gs
-};
+#include "typedefinitions.h"
 
 struct Scale {
 	u8* degrees;

@@ -8,6 +8,7 @@
 
 #include "argslot.h"
 #include "customdial.h"
+#include "typedefinitions.h"
 
 ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -29,7 +30,7 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 
 			oscWaveforms[i] = new DiscreteDial();
 			oscWaveforms[i]->setColor("#dd3");
-			oscWaveforms[i]->setSteps(5);
+			oscWaveforms[i]->setSteps((int)OscillatorWaveform::Count);
 
 			oscDetune[i] = new AnalogDial();
 			oscPulseWidth[i] = new AnalogDial();
@@ -64,7 +65,7 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 
 			envType[i] = new DiscreteDial();
 			envType[i]->setColor("#dd3");
-			envType[i]->setSteps(5);
+			envType[i]->setSteps((int)EnvelopeType::Count);
 
 			envAttack [i] = new AnalogDial();
 			envDecay  [i] = new AnalogDial();
@@ -86,10 +87,29 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			connect(envDecay[i], SIGNAL(valueChanged(int)), this, ARGSLOT(env%1DecayChange(int), i+1)));
 			connect(envSustain[i], SIGNAL(valueChanged(int)), this, ARGSLOT(env%1SustainChange(int), i+1)));
 			connect(envRelease[i], SIGNAL(valueChanged(int)), this, ARGSLOT(env%1ReleaseChange(int), i+1)));
-		};
+		}
 
 		set->setContentsMargins(20, 20, 20, 20);
 		envelopeTab->setLayout(set);
+	}
+
+	{
+		auto box = new QHBoxLayout();
+
+		servScale = new DiscreteDial();
+		servScale->setColor("#dd3");
+		servScale->setSteps((int)Notes::Count);
+
+		servTempo = new AnalogDial();
+
+		box->addWidget(servScale);
+		box->addWidget(servTempo);
+
+		connect(servScale, SIGNAL(valueChanged(int)), this, SLOT(servScaleChange(int)));
+		connect(servTempo, SIGNAL(valueChanged(int)), this, SLOT(servTempoChange(int)));
+
+		box->setContentsMargins(20, 20, 20, 20);
+		serverTab->setLayout(box);
 	}
 
 	addTab(oscillatorTab, "Oscillators");
@@ -132,12 +152,12 @@ void ClientGUI::osc2PulseWidthChange(int v){
 
 
 void ClientGUI::env1TypeChange(int v){
-	switch(v){
-		case 0:  envType[0]->setText("None"); break;
-		case 1:  envType[0]->setText("DC"); break;
-		case 2:  envType[0]->setText("Linear"); break;
-		case 3:  envType[0]->setText("AR"); break;
-		case 4:  envType[0]->setText("ADSR"); break;
+	switch((EnvelopeType)v){
+		case EnvelopeType::None:	envType[0]->setText("None"); break;
+		case EnvelopeType::DC:		envType[0]->setText("DC"); break;
+		case EnvelopeType::Linear:	envType[0]->setText("Linear"); break;
+		case EnvelopeType::AR:		envType[0]->setText("AR"); break;
+		case EnvelopeType::ADSR:	envType[0]->setText("ADSR"); break;
 		default: envType[0]->setText("unknown"); break;
 	}
 }
@@ -155,12 +175,12 @@ void ClientGUI::env1ReleaseChange(int v){
 }
 
 void ClientGUI::env2TypeChange(int v){
-	switch(v){
-		case 0:  envType[1]->setText("None"); break;
-		case 1:  envType[1]->setText("DC"); break;
-		case 2:  envType[1]->setText("Linear"); break;
-		case 3:  envType[1]->setText("AR"); break;
-		case 4:  envType[1]->setText("ADSR"); break;
+	switch((EnvelopeType)v){
+		case EnvelopeType::None:	envType[1]->setText("None"); break;
+		case EnvelopeType::DC:		envType[1]->setText("DC"); break;
+		case EnvelopeType::Linear:	envType[1]->setText("Linear"); break;
+		case EnvelopeType::AR:		envType[1]->setText("AR"); break;
+		case EnvelopeType::ADSR:	envType[1]->setText("ADSR"); break;
 		default: envType[1]->setText("unknown"); break;
 	}
 }
@@ -175,4 +195,18 @@ void ClientGUI::env2SustainChange(int v){
 }
 void ClientGUI::env2ReleaseChange(int v){
 	envRelease[1]->setText(QString("%1ms").arg(v));
+}
+
+void ClientGUI::servScaleChange(int v){
+	switch(v){
+		case 0:  servScale->setText("None"); break;
+		case 1:  servScale->setText("DC"); break;
+		case 2:  servScale->setText("Linear"); break;
+		case 3:  servScale->setText("AR"); break;
+		case 4:  servScale->setText("ADSR"); break;
+		default: servScale->setText("unknown"); break;
+	}
+}
+void ClientGUI::servTempoChange(int v){
+	servTempo->setText(QString("%1bps").arg(v));
 }

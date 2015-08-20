@@ -2,10 +2,7 @@
 #define OSCILLATOR_H
 
 #include "common.h"
-
-enum class OscillatorWaveform {
-	None = 0, Sine, Square, Triangle, Saw,
-};
+#include "typedefinitions.h"
 
 struct Oscillator {
 	OscillatorWaveform waveform;	

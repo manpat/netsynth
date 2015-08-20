@@ -20,6 +20,9 @@ public:
 	AnalogDial* envSustain[2];
 	AnalogDial* envRelease[2];
 
+	DiscreteDial* servScale;
+	AnalogDial* servTempo;
+
 public:
 	ClientGUI(QWidget* = nullptr);
 
@@ -36,12 +39,15 @@ public slots:
 	void env1DecayChange(int);
 	void env1SustainChange(int);
 	void env1ReleaseChange(int);
-	
+
 	void env2TypeChange(int);
 	void env2AttackChange(int);
 	void env2DecayChange(int);
 	void env2SustainChange(int);
 	void env2ReleaseChange(int);
+
+	void servScaleChange(int);
+	void servTempoChange(int);
 };
 
 #endif
