@@ -81,11 +81,11 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			oscbox->setLayout(box);
 			set->addWidget(oscbox);
 
-			oscWaveforms[i]->setValue(1);
-			oscWaveforms[i]->setValue(0);
-			oscDetune[i]->setValue(1);
-			oscDetune[i]->setValue(0);
-			oscPulseWidth[i]->setValue(50);
+			connect(envType[i], SIGNAL(valueChanged(int)), this, ARGSLOT(env%1TypeChange(int), i+1)));
+			connect(envAttack[i], SIGNAL(valueChanged(int)), this, ARGSLOT(env%1AttackChange(int), i+1)));
+			connect(envDecay[i], SIGNAL(valueChanged(int)), this, ARGSLOT(env%1DecayChange(int), i+1)));
+			connect(envSustain[i], SIGNAL(valueChanged(int)), this, ARGSLOT(env%1SustainChange(int), i+1)));
+			connect(envRelease[i], SIGNAL(valueChanged(int)), this, ARGSLOT(env%1ReleaseChange(int), i+1)));
 		};
 
 		set->setContentsMargins(20, 20, 20, 20);
@@ -117,7 +117,6 @@ void ClientGUI::osc2WaveformChange(int v){
 		default: oscWaveforms[1]->setText("unknown"); break;
 	}
 }
-
 void ClientGUI::osc1DetuneChange(int v){
 	oscDetune[0]->setText(QString::number(v));
 }
@@ -129,4 +128,51 @@ void ClientGUI::osc1PulseWidthChange(int v){
 }
 void ClientGUI::osc2PulseWidthChange(int v){
 	oscPulseWidth[1]->setText(QString("%1%").arg(v));
+}
+
+
+void ClientGUI::env1TypeChange(int v){
+	switch(v){
+		case 0:  envType[0]->setText("None"); break;
+		case 1:  envType[0]->setText("DC"); break;
+		case 2:  envType[0]->setText("Linear"); break;
+		case 3:  envType[0]->setText("AR"); break;
+		case 4:  envType[0]->setText("ADSR"); break;
+		default: envType[0]->setText("unknown"); break;
+	}
+}
+void ClientGUI::env1AttackChange(int v){
+	envAttack[0]->setText(QString("%1ms").arg(v));
+}
+void ClientGUI::env1DecayChange(int v){
+	envDecay[0]->setText(QString("%1ms").arg(v));
+}
+void ClientGUI::env1SustainChange(int v){
+	envSustain[0]->setText(QString("%1%").arg(v));
+}
+void ClientGUI::env1ReleaseChange(int v){
+	envRelease[0]->setText(QString("%1ms").arg(v));
+}
+
+void ClientGUI::env2TypeChange(int v){
+	switch(v){
+		case 0:  envType[1]->setText("None"); break;
+		case 1:  envType[1]->setText("DC"); break;
+		case 2:  envType[1]->setText("Linear"); break;
+		case 3:  envType[1]->setText("AR"); break;
+		case 4:  envType[1]->setText("ADSR"); break;
+		default: envType[1]->setText("unknown"); break;
+	}
+}
+void ClientGUI::env2AttackChange(int v){
+	envAttack[1]->setText(QString("%1ms").arg(v));
+}
+void ClientGUI::env2DecayChange(int v){
+	envDecay[1]->setText(QString("%1ms").arg(v));
+}
+void ClientGUI::env2SustainChange(int v){
+	envSustain[1]->setText(QString("%1%").arg(v));
+}
+void ClientGUI::env2ReleaseChange(int v){
+	envRelease[1]->setText(QString("%1ms").arg(v));
 }

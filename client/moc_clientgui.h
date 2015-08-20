@@ -31,6 +31,17 @@ public slots:
 	void osc1PulseWidthChange(int);
 	void osc2PulseWidthChange(int);
 
+	void env1TypeChange(int);
+	void env1AttackChange(int);
+	void env1DecayChange(int);
+	void env1SustainChange(int);
+	void env1ReleaseChange(int);
+	
+	void env2TypeChange(int);
+	void env2AttackChange(int);
+	void env2DecayChange(int);
+	void env2SustainChange(int);
+	void env2ReleaseChange(int);
 };
 
 #endif
