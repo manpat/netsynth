@@ -1,8 +1,8 @@
 #ifndef MOC_SERVERNETWORK_HPP
 #define MOC_SERVERNETWORK_HPP
 
-#include <QtCore>
-#include <QtNetwork>
+#include <QtCore/QtCore>
+#include <QtNetwork/QtNetwork>
 
 class ServerNetwork : public QObject {
 	Q_OBJECT

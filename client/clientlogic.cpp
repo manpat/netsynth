@@ -48,7 +48,7 @@ bool ClientLogic::eventFilter(QObject* object, QEvent* event){
 		PacketNote packetNote;
 
 		packetNote.degree = 2;
-		packetNote.octave = 4;
+		packetNote.octave = 0;
 		packetNote.state = 1;
 
 		clientNetwork->writeData(packetNote);

@@ -3,8 +3,8 @@
 
 #include "packet.h"
 
-#include <QtCore>
-#include <QtNetwork>
+#include <QtCore/QtCore>
+#include <QtNetwork/QtNetwork>
 
 class ClientNetwork : public QObject {
 	Q_OBJECT
