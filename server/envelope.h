@@ -2,14 +2,7 @@
 #define ENVELOPE_H
 
 #include "common.h"
-
-enum class EnvelopeType : u8 {
-	None = 0,
-	DC,
-	Linear, // Near instant onset, ignores everything but release
-	AR, // Ignores decay and sustain
-	ADSR,
-};
+#include "typedefinitions.h"
 
 struct NoteInfo;
 

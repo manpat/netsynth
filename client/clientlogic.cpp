@@ -43,12 +43,10 @@ bool ClientLogic::eventFilter(QObject* object, QEvent* event){
 		auto keyevent = static_cast<QKeyEvent*>(event);
 		if(keyevent->isAutoRepeat()) return false;
 
-		// qDebug() << "Keypress" << keyevent->text();
-
 		PacketNote packetNote;
 
 		packetNote.degree = 2;
-		packetNote.octave = 4;
+		packetNote.octave = 0;
 		packetNote.state = 1;
 
 		clientNetwork->writeData(packetNote);
@@ -57,7 +55,13 @@ bool ClientLogic::eventFilter(QObject* object, QEvent* event){
 		auto keyevent = static_cast<QKeyEvent*>(event);
 		if(keyevent->isAutoRepeat()) return false;
 
-		// qDebug() << "Keyrelease" << keyevent->text();
+		PacketNote packetNote;
+
+		packetNote.degree = 2;
+		packetNote.octave = 0;
+		packetNote.state = 0;
+
+		clientNetwork->writeData(packetNote);
 	}else{
 		return false;
 	}
@@ -66,14 +70,17 @@ bool ClientLogic::eventFilter(QObject* object, QEvent* event){
 }
 
 void ClientLogic::requestConnect(const QString& ip){
-
 	if(ip.isNull()){
 		emit connectResult(1);
 	}else{
 		qDebug() << "IP accepted";
 
-		clientNetwork->connectToHost(ip);
-
-		emit connectResult(0);
+		if(clientNetwork->connectToHost(ip)){
+			qDebug() << "Connected";
+			emit connectResult(0);
+		}else{
+			qDebug() << "Failed";
+			emit connectResult(2);
+		}
 	}
 }

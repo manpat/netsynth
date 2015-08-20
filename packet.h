@@ -3,37 +3,40 @@
 
 #pragma pack(push, 1)
 
+#include "common.h"
+
 class PacketNote {
 private:
-	char type = 0;
+	u8 type = 0;
 public:
-	char degree;
-	char octave;
-	char state;
+	s8 degree;
+	s8 octave;
+	u8 state;
 };
 
 class PacketParamConfig {
 public:
-	char paramId;
+	u8 paramId;
 	float value;
 };
 
 class PacketModeConfig {
-	char modeId;
-	char mode;
+	u8 modeId;
+	u8 mode;
 };
 
 class PacketScale {
 private:
-	char type = 1;
+	u8 type = 1;
 public:
-	enum scaleType
-	{
-		AMinor,
-		AMajor,
+	enum ScaleType : u8 {
+		Minor,
+		Major,
 		Pentatonic
 	};
-	char rootNote;
+
+	ScaleType scaleType;
+	s8 rootNote;
 };
 
 #pragma pack(pop)

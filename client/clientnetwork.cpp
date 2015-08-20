@@ -1,8 +1,6 @@
 #include "moc_clientnetwork.h"
 #include "packet.h"
 
-#include <QtNetwork/QtNetwork>
-
 static inline QByteArray IntToArray(qint32 source);
 
 ClientNetwork::ClientNetwork(QObject *parent) : QObject(parent){
