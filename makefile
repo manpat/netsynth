@@ -2,7 +2,7 @@ PREFIX ?=
 INCLUDES  := -I/usr/include/qt4 -I/home/patrick/Development/libraries/fmodstudio/api/lowlevel/inc
 SRCFLAGS  := -std=c++11 -Wall $(INCLUDES) -I$(PREFIX) -I.
 LINKFLAGS := 
-LIBS := -Wl,--rpath=lib -lQtGui -lQtCore lib/libfmod.so.6
+LIBS := -Wl,--rpath=lib -lQtGui -lQtNetwork -lQtCore lib/libfmod.so.6
 
 MOC := $(shell find $(PREFIX) -name "moc_*.h")
 SRC := $(shell find $(PREFIX) -name "*.cpp") $(MOC:%.h=%.cpp)

@@ -3,6 +3,7 @@
 #include <QtCore/QDebug>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QApplication>
+#include <QtNetwork/QHostAddress>
 
 #include "moc_clientgui.h"
 #include "moc_connectdialog.h"
@@ -10,18 +11,22 @@
 ClientLogic::ClientLogic(){
 	clientGUI = new ClientGUI();
 	clientGUI->setWindowTitle("Client");
-	clientGUI->resize(800, 600);
+	clientGUI->resize(800, 400);
 	clientGUI->show();
 
 	clientGUI->installEventFilter(this);
 
-	auto connectdialog = new ConnectDialog(clientGUI);
-	connect(connectdialog, SIGNAL(rejected()), qApp, SLOT(quit()));
-	connect(connectdialog, SIGNAL(requestConnect(const QString&)), 
+	auto connectDialog = new ConnectDialog(clientGUI);
+	connect(connectDialog, SIGNAL(rejected()), qApp, SLOT(quit()));
+	connect(connectDialog, SIGNAL(requestConnect(const QString&)), 
 		this, SLOT(requestConnect(const QString&)));
 
-	connectdialog->setModal(true);
-	connectdialog->show();
+	connect(this, SIGNAL(connectResult(int)), 
+		connectDialog, SLOT(connectResult(int)),
+		Qt::QueuedConnection);
+
+	connectDialog->setModal(true);
+	connectDialog->show();
 }
 
 ClientLogic::~ClientLogic(){
@@ -48,5 +53,13 @@ bool ClientLogic::eventFilter(QObject* object, QEvent* event){
 }
 
 void ClientLogic::requestConnect(const QString& ip){
-	qDebug() << "Request connect to" << ip;
+	QHostAddress addr(ip);
+
+	if(addr.isNull()){
+		emit connectResult(1);
+	}else{
+		qDebug() << "IP accepted";
+		// Connect here yo
+		emit connectResult(0);
+	}
 }

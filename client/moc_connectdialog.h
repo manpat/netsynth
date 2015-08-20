@@ -13,6 +13,9 @@ protected:
 public:
 	ConnectDialog(QWidget* = nullptr);
 
+public slots:
+	void connectResult(int);
+
 private slots:
 	void doConnect();
 

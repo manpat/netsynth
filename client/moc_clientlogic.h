@@ -5,11 +5,13 @@
 #include <QtCore/QObject>
 
 class ClientGUI;
+class ConnectDialog;
 
 class ClientLogic : QObject {
 	Q_OBJECT 
 protected:
 	ClientGUI* clientGUI;
+	ConnectDialog* connectDialog;
 
 public:
 	ClientLogic();
@@ -19,6 +21,9 @@ public:
 
 public slots:
 	void requestConnect(const QString&);
+
+signals:
+	void connectResult(int);
 };
 
 #endif

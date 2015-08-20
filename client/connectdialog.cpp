@@ -1,6 +1,7 @@
 #include "moc_connectdialog.h"
 
 #include <QtGui/QLabel>
+#include <QtGui/QToolTip>
 #include <QtGui/QLineEdit>
 #include <QtGui/QPushButton>
 #include <QtGui/QHBoxLayout>
@@ -32,6 +33,13 @@ ConnectDialog::ConnectDialog(QWidget* p)
 void ConnectDialog::doConnect(){
 	if(!input->hasAcceptableInput()) return;
 
-	qDebug() << "DO CONNECT PLOX " << input->text();
 	emit requestConnect(input->text());
+}
+
+void ConnectDialog::connectResult(int i){
+	if(i == 0){
+		accept();
+	}else{
+		QToolTip::showText(input->mapToGlobal(QPoint(0, 0)), "Invalid IP");
+	}
 }
