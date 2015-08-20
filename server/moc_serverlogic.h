@@ -9,6 +9,7 @@
 class InstrumentManager;
 
 class ServerLogic : public QWidget {
+	Q_OBJECT
 protected:
 	FmodManager fmodManager;
 	InstrumentManager* instrumentManager;
@@ -20,6 +21,9 @@ public:
 public:
 	ServerLogic();
 	~ServerLogic();
+
+private slots:
+	void fmodready();
 };
 
 #endif

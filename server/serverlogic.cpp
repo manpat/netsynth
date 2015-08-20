@@ -1,4 +1,4 @@
-#include "serverlogic.h"
+#include "moc_serverlogic.h"
 #include "instrumentmanager.h"
 #include "instrument.h"
 #include "notescheduler.h"
@@ -15,8 +15,16 @@ ServerLogic::ServerLogic(){
 	instrumentManager = new InstrumentManager{&fmodManager, {}};
 	scale.ConstructScale(Notes::A, ScaleType::Major);
 
-	while(!fmodManager.isRunning()) {}
+	connect(&fmodManager, SIGNAL(ready()), this, SLOT(fmodready()));
+}
 
+ServerLogic::~ServerLogic(){
+	fmodManager.kill();
+	fmodManager.wait(2000); // Wait max 2s
+	fmodManager.terminate(); // Just in case
+}
+
+void ServerLogic::fmodready(){
 	auto inst = instrumentManager->NewInstrument(1);
 
 	inst->scheduler->quantisation = QuantisationSetting::Eighth;
@@ -43,10 +51,4 @@ ServerLogic::ServerLogic(){
 	inst->envelopes[1].release = 1.0;
 
 	std::cout << "Instrument created" << std::endl;
-}
-
-ServerLogic::~ServerLogic(){
-	fmodManager.kill();
-	fmodManager.wait(2000); // Wait max 2s
-	fmodManager.terminate(); // Just in case
 }

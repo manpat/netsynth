@@ -1,5 +1,5 @@
 #include "notescheduler.h"
-#include "serverlogic.h"
+#include "moc_serverlogic.h"
 #include <algorithm>
 #include <cmath>
 

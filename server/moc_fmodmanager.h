@@ -57,6 +57,9 @@ public:
 	FmodSystemRef getSystem();
 	bool isRunning() const {return running;};
 
+signals:
+	void ready();
+
 };
 
 #endif

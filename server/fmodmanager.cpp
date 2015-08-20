@@ -27,6 +27,8 @@ void FmodManager::run(){
 	cfmod(system->init(100, FMOD_INIT_NORMAL, nullptr));
 	mutex.unlock();
 
+	emit ready();
+
 	running = true;
 	while(running){
 		mutex.lock();
