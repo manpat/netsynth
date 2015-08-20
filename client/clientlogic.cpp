@@ -25,8 +25,8 @@ ClientLogic::ClientLogic(){
 		connectDialog, SLOT(connectResult(int)),
 		Qt::QueuedConnection);
 
-	connectDialog->setModal(true);
-	connectDialog->show();
+	// connectDialog->setModal(true);
+	// connectDialog->show();
 }
 
 ClientLogic::~ClientLogic(){
@@ -38,13 +38,13 @@ bool ClientLogic::eventFilter(QObject* object, QEvent* event){
 		auto keyevent = static_cast<QKeyEvent*>(event);
 		if(keyevent->isAutoRepeat()) return false;
 
-		qDebug() << "Keypress" << keyevent->text();
+		// qDebug() << "Keypress" << keyevent->text();
 
 	}else if(event->type() == QEvent::KeyRelease){
 		auto keyevent = static_cast<QKeyEvent*>(event);
 		if(keyevent->isAutoRepeat()) return false;
 
-		qDebug() << "Keyrelease" << keyevent->text();
+		// qDebug() << "Keyrelease" << keyevent->text();
 	}else{
 		return false;
 	}

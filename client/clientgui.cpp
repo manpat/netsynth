@@ -2,6 +2,7 @@
 #include <QtGui/QWidget>
 #include <QtGui/QLabel>
 #include <QtGui/QHBoxLayout>
+#include <QtGui/QGroupBox>
 // #include <QtGui/QVBoxLayout>
 // #include <QtGui/QGridLayout>
 
@@ -23,24 +24,29 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 		auto set  = new QVBoxLayout();
 		auto osc1 = new QHBoxLayout();
 		auto osc2 = new QHBoxLayout();
-		osc1->addWidget(new QLabel("Oscillator 1"));
-		osc2->addWidget(new QLabel("Oscillator 2"));
 
 		{
-			osc1->addWidget(new CustomDial());
-			osc1->addWidget(new CustomDial());
-			osc1->addWidget(new CustomDial());
-			osc1->addWidget(new CustomDial());
+			osc1->addWidget(new DiscreteDial());
+			osc1->addWidget(new AnalogDial());
+			osc1->addWidget(new AnalogDial());
+			osc1->addWidget(new AnalogDial());
 		}
 		{
-			osc2->addWidget(new CustomDial());
-			osc2->addWidget(new CustomDial());
-			osc2->addWidget(new CustomDial());
-			osc2->addWidget(new CustomDial());
+			osc2->addWidget(new DiscreteDial());
+			osc2->addWidget(new AnalogDial());
+			osc2->addWidget(new AnalogDial());
+			// osc2->addWidget(new AnalogDial());
+			// osc2->addWidget(new AnalogDial());
 		}
 
-		set->addLayout(osc1);
-		set->addLayout(osc2);
+		auto osc1box = new QGroupBox("Oscillator 1");
+		auto osc2box = new QGroupBox("Oscillator 2");
+		osc1box->setLayout(osc1);
+		osc2box->setLayout(osc2);
+
+		set->addWidget(osc1box);
+		set->addWidget(osc2box);
+		set->setContentsMargins(20, 20, 20, 20);
 		oscillatorTab->setLayout(set);
 	}
 

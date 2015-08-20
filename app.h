@@ -2,7 +2,7 @@
 #define APP_H
 
 #ifdef SERVER
-#	include "serverlogic.h"
+#	include "moc_serverlogic.h"
 	using App = ServerLogic;
 
 #else

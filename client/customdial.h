@@ -3,10 +3,21 @@
 
 #include <QtGui/QDial>
 
-class CustomDial : public QDial {
-	// Q_OBJECT
+class AnalogDial : public QDial {
 public:
-	CustomDial(QWidget* parent = nullptr);
+	AnalogDial(QWidget* parent = nullptr);
+
+	void setColor(const QColor&);
+
+protected:
+	void paintEvent(QPaintEvent*) override;
+
+	QColor color;
+};
+
+class DiscreteDial : public QDial {
+public:
+	DiscreteDial(QWidget* parent = nullptr);
 
 	void setColor(const QColor&);
 
