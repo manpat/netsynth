@@ -30,21 +30,31 @@ void AnalogDial::paintEvent(QPaintEvent*){
 
 	p.setPen(Qt::NoPen);
 	p.setBrush(brush);
-	const auto gap = 45;
-	p.drawPie(r.adjusted(20, 20,-20,-20), (180+gap)*16, (gap*2-360)*16);
+	const auto gap = 90 *16;
+	const auto arcsize = 360*16-gap;
+	const auto startangle = 270*16 - gap/2;
+
+	p.drawPie(r.adjusted(25, 25,-25,-25), startangle, -arcsize);
+
+	p.setPen(QPen(QColor("#333"), 15));
+	p.drawArc(r.adjusted(15, 15,-15,-15), startangle, -arcsize);
 
 	if(hover) p.setPen(QPen(color.lighter(120), 15));
 	else p.setPen(QPen(color, 15));
-	p.drawArc(r.adjusted(10, 10,-10,-10), (180+gap)*16, (gap*2-360)*16*value()/100);
+	p.drawArc(r.adjusted(15, 15,-15,-15), startangle, -arcsize*value()/100);
 }
 
 
-DiscreteDial::DiscreteDial(QWidget* p) : QDial(p), color("#3d3"){
-	setRange(0, 5);
+DiscreteDial::DiscreteDial(QWidget* p) : QDial(p), color("#dd3"){
+	setSteps(5);
 }
 
 void DiscreteDial::setColor(const QColor& c){
 	color = c;
+}
+
+void DiscreteDial::setSteps(int s){
+	setMaximum(s-1);
 }
 
 void DiscreteDial::paintEvent(QPaintEvent*){
@@ -69,18 +79,19 @@ void DiscreteDial::paintEvent(QPaintEvent*){
 	// Note: angles in 1/16ths of a degree
 	p.setPen(Qt::NoPen);
 	p.setBrush(brush);
-	p.drawEllipse(r.adjusted(20, 20,-20,-20));
+	p.drawEllipse(r.adjusted(25, 25,-25,-25));
 
-	const auto gap = 45 *16;
-	const auto arcsize = 360*16-gap*2;
+	const auto gap = 90 *16;
+	const auto arcsize = 360*16-gap;
+	const auto startangle = 270*16 - gap/2;
 	const auto barsize = arcsize/(maximum()+1);
 
 	p.setPen(QPen(QColor("#333"), 15));
-	p.drawArc(r.adjusted(10, 10,-10,-10), 180*16+gap, -arcsize);
+	p.drawArc(r.adjusted(15, 15,-15,-15), startangle, -arcsize);
 
 	if(hover) p.setPen(QPen(color.lighter(120), 15));
 	else p.setPen(QPen(color, 15));
 
 	auto perc = value()*barsize;
-	p.drawArc(r.adjusted(10, 10,-10,-10), 180*16+gap-perc-barsize, barsize);
+	p.drawArc(r.adjusted(15, 15,-15,-15), startangle-perc-barsize, barsize);
 }

@@ -29,14 +29,11 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			osc1->addWidget(new DiscreteDial());
 			osc1->addWidget(new AnalogDial());
 			osc1->addWidget(new AnalogDial());
-			osc1->addWidget(new AnalogDial());
 		}
 		{
 			osc2->addWidget(new DiscreteDial());
 			osc2->addWidget(new AnalogDial());
 			osc2->addWidget(new AnalogDial());
-			// osc2->addWidget(new AnalogDial());
-			// osc2->addWidget(new AnalogDial());
 		}
 
 		auto osc1box = new QGroupBox("Oscillator 1");

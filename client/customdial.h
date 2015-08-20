@@ -20,6 +20,7 @@ public:
 	DiscreteDial(QWidget* parent = nullptr);
 
 	void setColor(const QColor&);
+	void setSteps(int);
 
 protected:
 	void paintEvent(QPaintEvent*) override;
