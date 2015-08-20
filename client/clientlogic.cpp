@@ -7,6 +7,8 @@
 
 #include "moc_clientgui.h"
 #include "moc_connectdialog.h"
+#include "moc_clientnetwork.h"
+#include "packet.h"
 
 ClientLogic::ClientLogic(){
 	clientGUI = new ClientGUI();
@@ -16,6 +18,8 @@ ClientLogic::ClientLogic(){
 
 	clientGUI->installEventFilter(this);
 
+	clientNetwork = new ClientNetwork();
+	
 	auto connectDialog = new ConnectDialog(clientGUI);
 	connect(connectDialog, SIGNAL(rejected()), qApp, SLOT(quit()));
 	connect(connectDialog, SIGNAL(requestConnect(const QString&)), 
@@ -30,7 +34,8 @@ ClientLogic::ClientLogic(){
 }
 
 ClientLogic::~ClientLogic(){
-
+	clientNetwork->disconnect();
+	clientNetwork->deleteLater();
 }
 
 bool ClientLogic::eventFilter(QObject* object, QEvent* event){
@@ -39,6 +44,14 @@ bool ClientLogic::eventFilter(QObject* object, QEvent* event){
 		if(keyevent->isAutoRepeat()) return false;
 
 		qDebug() << "Keypress" << keyevent->text();
+
+		PacketNote packetNote;
+
+		packetNote.degree = 2;
+		packetNote.octave = 4;
+		packetNote.state = 1;
+
+		clientNetwork->writeData(packetNote);
 
 	}else if(event->type() == QEvent::KeyRelease){
 		auto keyevent = static_cast<QKeyEvent*>(event);
@@ -53,13 +66,14 @@ bool ClientLogic::eventFilter(QObject* object, QEvent* event){
 }
 
 void ClientLogic::requestConnect(const QString& ip){
-	QHostAddress addr(ip);
 
-	if(addr.isNull()){
+	if(ip.isNull()){
 		emit connectResult(1);
 	}else{
 		qDebug() << "IP accepted";
-		// Connect here yo
+
+		clientNetwork->connectToHost(ip);
+
 		emit connectResult(0);
 	}
 }

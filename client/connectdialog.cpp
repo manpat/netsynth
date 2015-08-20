@@ -10,6 +10,8 @@
 #include <QtCore/QDebug>
 #include <QtCore/QRegExp>
 
+#include "moc_clientnetwork.h"
+
 ConnectDialog::ConnectDialog(QWidget* p)
 	: QDialog(p){
 
