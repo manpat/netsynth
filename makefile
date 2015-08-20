@@ -13,10 +13,11 @@ SRCFLAGS += -DSERVER
 endif
 
 .PHONY: build all
+.SUFFIXES:
 
 default: checkdirs
-	@make -j4 build --silent PREFIX=server
-	# @make -j4 build --silent PREFIX=client
+	@# @make -j4 build -r --silent PREFIX=server
+	@make -j4 build -r --silent PREFIX=client
 
 build: $(OBJ)
 	@echo "-- Building $(PREFIX) --"
@@ -34,14 +35,10 @@ moc_%.cpp: moc_%.h
 	@echo "-- Generating $@ --"
 	@moc-qt4 $(INCLUDES) $^ -o$@
 
-moc_%.cpp: moc_%.h %.cpp
-	@echo "-- Generating $@ --"
-	@moc-qt4 $(INCLUDES) $^ -o$@
-
 %.o: %.cpp %.h
 	@echo "-- Generating $@ --"
 	@g++ $(SRCFLAGS) -c $< -o $@
-	
+
 %.o: %.cpp
 	@echo "-- Generating $@ --"
 	@g++ $(SRCFLAGS) -c $< -o $@
@@ -53,5 +50,5 @@ clean:
 
 run: default
 	@echo "-- Running --"
-	@server/build
-	# @client/build
+	# @server/build
+	@client/build

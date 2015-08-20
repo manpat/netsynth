@@ -7,6 +7,7 @@
 class ClientGUI : public QTabWidget {
 public:
 	ClientGUI(QWidget* = nullptr);
+
 };
 
 #endif

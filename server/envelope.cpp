@@ -55,5 +55,5 @@ f32 Envelope::Generate(f32 phase, NoteInfo& note){
 		}
 	}
 
-	return 1.0; // No envelope
+	return 0.0; // No envelope
 }

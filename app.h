@@ -6,7 +6,7 @@
 	using App = ServerLogic;
 
 #else
-#	include "clientlogic.h"
+#	include "moc_clientlogic.h"
 	using App = ClientLogic;
 
 #endif
