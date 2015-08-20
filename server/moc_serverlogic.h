@@ -5,6 +5,7 @@
 #include "common.h"
 #include "scale.h"
 #include "moc_fmodmanager.h"
+#include "moc_servernetwork.h"
 
 class InstrumentManager;
 
@@ -13,6 +14,7 @@ class ServerLogic : public QWidget {
 protected:
 	FmodManager fmodManager;
 	InstrumentManager* instrumentManager;
+	ServerNetwork* serverNetwork;
 	
 public:
 	static Scale scale;
@@ -24,6 +26,7 @@ public:
 
 private slots:
 	void fmodready();
+	void handleData(QByteArray data);
 };
 
 #endif

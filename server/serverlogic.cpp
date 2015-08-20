@@ -2,6 +2,7 @@
 #include "instrumentmanager.h"
 #include "instrument.h"
 #include "notescheduler.h"
+#include "packet.h"
 
 Scale ServerLogic::scale;
 f32 ServerLogic::tempo = 60.0;
@@ -11,11 +12,14 @@ ServerLogic::ServerLogic(){
 	resize(800, 600);
 	show();
 
+	serverNetwork = new ServerNetwork();
+
 	fmodManager.start();
 	instrumentManager = new InstrumentManager{&fmodManager, {}};
 	scale.ConstructScale(Notes::A, ScaleType::Major);
 
 	connect(&fmodManager, SIGNAL(ready()), this, SLOT(fmodready()));
+	connect(serverNetwork, SIGNAL(dataReceived(QByteArray)), this, SLOT(handleData(QByteArray)));
 }
 
 ServerLogic::~ServerLogic(){
@@ -51,4 +55,10 @@ void ServerLogic::fmodready(){
 	inst->envelopes[1].release = 1.0;
 
 	std::cout << "Instrument created" << std::endl;
+}
+
+void ServerLogic::handleData(QByteArray data) {
+	for (int i = 0; i < data.size(); i++){
+		qDebug() << (int)data[i];
+	}
 }

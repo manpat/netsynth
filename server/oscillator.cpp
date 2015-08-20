@@ -1,4 +1,5 @@
 #include "oscillator.h"
+#include "common.h"
 #include <cmath>
 
 f32 Oscillator::Generate(f64 phase, f32 frequency){
