@@ -1,7 +1,7 @@
 #include "moc_clientnetwork.h"
 #include "packet.h"
 
-#include <QtNetwork>
+#include <QtNetwork/QtNetwork>
 
 static inline QByteArray IntToArray(qint32 source);
 
@@ -14,10 +14,9 @@ bool ClientNetwork::connectToHost(QString host) {
 	return socket->waitForConnected();
 }
 
-bool ClientNetwork::writeData(PacketNote packet) {
+bool ClientNetwork::writeData(const PacketNote &packet) {
 	if (socket->state() == QAbstractSocket::ConnectedState) {
-		QByteArray buf = (const char*)&packet;
-		socket->write(IntToArray(buf.size()));
+		auto buf = QByteArray((const char*)&packet, sizeof(packet));
 		socket->write(buf);
 		return socket->waitForBytesWritten();
 	} else {
@@ -25,10 +24,9 @@ bool ClientNetwork::writeData(PacketNote packet) {
 	}
 }
 
-bool ClientNetwork::writeData(PacketModeConfig packet) {
+bool ClientNetwork::writeData(const PacketModeConfig &packet) {
 	if (socket->state() == QAbstractSocket::ConnectedState) {
-		QByteArray buf = (const char*)&packet;
-		socket->write(IntToArray(buf.size()));
+		auto buf = QByteArray((const char*)&packet, sizeof(packet));
 		socket->write(buf);
 		return socket->waitForBytesWritten();
 	} else {
@@ -36,10 +34,9 @@ bool ClientNetwork::writeData(PacketModeConfig packet) {
 	}
 }
 
-bool ClientNetwork::writeData(PacketParamConfig packet) {
+bool ClientNetwork::writeData(const PacketParamConfig &packet) {
 	if (socket->state() == QAbstractSocket::ConnectedState) {
-		QByteArray buf = (const char*)&packet;
-		socket->write(IntToArray(buf.size()));
+		auto buf = QByteArray((const char*)&packet, sizeof(packet));
 		socket->write(buf);
 		return socket->waitForBytesWritten();
 	} else {
@@ -47,10 +44,9 @@ bool ClientNetwork::writeData(PacketParamConfig packet) {
 	}
 }
 
-bool ClientNetwork::writeData(PacketScale packet) {
+bool ClientNetwork::writeData(const PacketScale &packet) {
 	if (socket->state() == QAbstractSocket::ConnectedState) {
-		QByteArray buf = (const char*)&packet;
-		socket->write(IntToArray(buf.size()));
+		auto buf = QByteArray((const char*)&packet, sizeof(packet));
 		socket->write(buf);
 		return socket->waitForBytesWritten();
 	} else {

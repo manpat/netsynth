@@ -1,8 +1,8 @@
 #ifndef MOC_SERVERNETWORK_HPP
 #define MOC_SERVERNETWORK_HPP
 
-#include <QtCore>
-#include <QtNetwork>
+#include <QtCore/QtCore>
+#include <QtNetwork/QtNetwork>
 
 class ServerNetwork : public QObject {
 	Q_OBJECT
@@ -20,7 +20,6 @@ private slots:
 private:
 	QTcpServer *server;
 	QHash<QTcpSocket*, QByteArray*> buffers;
-	QHash<QTcpSocket*, qint32*> sizes;
 };
 
 #endif//MOC_SERVERNETWORK_HPP

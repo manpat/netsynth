@@ -3,8 +3,8 @@
 
 #include "packet.h"
 
-#include <QtCore>
-#include <QtNetwork>
+#include <QtCore/QtCore>
+#include <QtNetwork/QtNetwork>
 
 class ClientNetwork : public QObject {
 	Q_OBJECT
@@ -13,10 +13,10 @@ public:
 
 public slots:
 	bool connectToHost(QString host);
-	bool writeData(PacketNote packet);
-	bool writeData(PacketModeConfig packet);
-	bool writeData(PacketParamConfig packet);
-	bool writeData(PacketScale packet);
+	bool writeData(const PacketNote &packet);
+	bool writeData(const PacketModeConfig &packet);
+	bool writeData(const PacketParamConfig &packet);
+	bool writeData(const PacketScale &packet);
 
 private:
 	QTcpSocket *socket;

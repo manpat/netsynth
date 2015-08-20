@@ -29,8 +29,8 @@ ClientLogic::ClientLogic(){
 		connectDialog, SLOT(connectResult(int)),
 		Qt::QueuedConnection);
 
-	// connectDialog->setModal(true);
-	// connectDialog->show();
+	connectDialog->setModal(true);
+	connectDialog->show();
 }
 
 ClientLogic::~ClientLogic(){
