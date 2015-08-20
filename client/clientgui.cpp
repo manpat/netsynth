@@ -98,9 +98,10 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 
 		servScale = new DiscreteDial();
 		servScale->setColor("#dd3");
-		servScale->setSteps((int)Notes::Count);
+		servScale->setRange((int)Notes::A, (int)Notes::Gs);
 
 		servTempo = new AnalogDial();
+		servTempo->setRange(40, 240);
 
 		box->addWidget(servScale);
 		box->addWidget(servTempo);
@@ -118,22 +119,22 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 }
 
 void ClientGUI::osc1WaveformChange(int v){
-	switch(v){
-		case 0: oscWaveforms[0]->setText("None"); break;
-		case 1: oscWaveforms[0]->setText("Sine"); break;
-		case 2: oscWaveforms[0]->setText("Square"); break;
-		case 3: oscWaveforms[0]->setText("Triangle"); break;
-		case 4: oscWaveforms[0]->setText("Saw"); break;
+	switch((OscillatorWaveform)v){
+		case OscillatorWaveform::None: oscWaveforms[0]->setText("None"); break;
+		case OscillatorWaveform::Sine: oscWaveforms[0]->setText("Sine"); break;
+		case OscillatorWaveform::Square: oscWaveforms[0]->setText("Square"); break;
+		case OscillatorWaveform::Triangle: oscWaveforms[0]->setText("Triangle"); break;
+		case OscillatorWaveform::Saw: oscWaveforms[0]->setText("Saw"); break;
 		default: oscWaveforms[0]->setText("unknown"); break;
 	}
 }
 void ClientGUI::osc2WaveformChange(int v){
-	switch(v){
-		case 0: oscWaveforms[1]->setText("None"); break;
-		case 1: oscWaveforms[1]->setText("Sine"); break;
-		case 2: oscWaveforms[1]->setText("Square"); break;
-		case 3: oscWaveforms[1]->setText("Triangle"); break;
-		case 4: oscWaveforms[1]->setText("Saw"); break;
+	switch((OscillatorWaveform)v){
+		case OscillatorWaveform::None: oscWaveforms[0]->setText("None"); break;
+		case OscillatorWaveform::Sine: oscWaveforms[0]->setText("Sine"); break;
+		case OscillatorWaveform::Square: oscWaveforms[0]->setText("Square"); break;
+		case OscillatorWaveform::Triangle: oscWaveforms[0]->setText("Triangle"); break;
+		case OscillatorWaveform::Saw: oscWaveforms[0]->setText("Saw"); break;
 		default: oscWaveforms[1]->setText("unknown"); break;
 	}
 }
@@ -198,12 +199,19 @@ void ClientGUI::env2ReleaseChange(int v){
 }
 
 void ClientGUI::servScaleChange(int v){
-	switch(v){
-		case 0:  servScale->setText("None"); break;
-		case 1:  servScale->setText("DC"); break;
-		case 2:  servScale->setText("Linear"); break;
-		case 3:  servScale->setText("AR"); break;
-		case 4:  servScale->setText("ADSR"); break;
+	switch((Notes)v){
+		case Notes::A :  servScale->setText("A"); break;
+		case Notes::As:  servScale->setText("A#"); break;
+		case Notes::B :  servScale->setText("B"); break;
+		case Notes::C :  servScale->setText("C"); break;
+		case Notes::Cs:  servScale->setText("C#"); break;
+		case Notes::D :  servScale->setText("D"); break;
+		case Notes::Ds:  servScale->setText("D#"); break;
+		case Notes::E :  servScale->setText("E"); break;
+		case Notes::F :  servScale->setText("F"); break;
+		case Notes::Fs:  servScale->setText("F#"); break;
+		case Notes::G :  servScale->setText("G"); break;
+		case Notes::Gs:  servScale->setText("G#"); break;
 		default: servScale->setText("unknown"); break;
 	}
 }

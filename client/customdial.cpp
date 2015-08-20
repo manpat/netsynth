@@ -109,7 +109,7 @@ void DiscreteDial::paintEvent(QPaintEvent*){
 	const auto gap = 90 *16;
 	const auto arcsize = 360*16-gap;
 	const auto startangle = 270*16 - gap/2;
-	const auto barsize = arcsize/(maximum()+1);
+	const auto barsize = arcsize/(maximum()-minimum()+1);
 
 	r.adjust(15, 15,-15,-15);
 
@@ -119,7 +119,7 @@ void DiscreteDial::paintEvent(QPaintEvent*){
 	if(hover) p.setPen(QPen(color.lighter(120), 15));
 	else p.setPen(QPen(color, 15));
 
-	auto perc = value()*barsize;
+	auto perc = (value()-minimum())*barsize;
 	p.drawArc(r, startangle-perc-barsize, barsize);
 
 	r.adjust(20, 20,-20,-20);
