@@ -42,6 +42,10 @@ void ConnectDialog::connectResult(int i){
 	if(i == 0){
 		accept();
 	}else{
-		QToolTip::showText(input->mapToGlobal(QPoint(0, 0)), "Invalid IP");
+		switch(i){
+		case 1: QToolTip::showText(input->mapToGlobal(QPoint(0, 0)), "Invalid IP"); break;
+		case 2: QToolTip::showText(input->mapToGlobal(QPoint(0, 0)), "Connection failed"); break;
+		default: QToolTip::showText(input->mapToGlobal(QPoint(0, 0)), "Unknown error"); break;
+		}
 	}
 }

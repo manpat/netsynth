@@ -14,7 +14,7 @@ bool ClientNetwork::connectToHost(QString host) {
 
 bool ClientNetwork::writeData(PacketNote packet) {
 	if (socket->state() == QAbstractSocket::ConnectedState) {
-		QByteArray buf = (const char*)&packet;
+		auto buf = QByteArray((const char*)&packet, sizeof(packet));
 		socket->write(IntToArray(buf.size()));
 		socket->write(buf);
 		return socket->waitForBytesWritten();
@@ -25,7 +25,7 @@ bool ClientNetwork::writeData(PacketNote packet) {
 
 bool ClientNetwork::writeData(PacketModeConfig packet) {
 	if (socket->state() == QAbstractSocket::ConnectedState) {
-		QByteArray buf = (const char*)&packet;
+		auto buf = QByteArray((const char*)&packet, sizeof(packet));
 		socket->write(IntToArray(buf.size()));
 		socket->write(buf);
 		return socket->waitForBytesWritten();
@@ -36,7 +36,7 @@ bool ClientNetwork::writeData(PacketModeConfig packet) {
 
 bool ClientNetwork::writeData(PacketParamConfig packet) {
 	if (socket->state() == QAbstractSocket::ConnectedState) {
-		QByteArray buf = (const char*)&packet;
+		auto buf = QByteArray((const char*)&packet, sizeof(packet));
 		socket->write(IntToArray(buf.size()));
 		socket->write(buf);
 		return socket->waitForBytesWritten();
@@ -47,7 +47,7 @@ bool ClientNetwork::writeData(PacketParamConfig packet) {
 
 bool ClientNetwork::writeData(PacketScale packet) {
 	if (socket->state() == QAbstractSocket::ConnectedState) {
-		QByteArray buf = (const char*)&packet;
+		auto buf = QByteArray((const char*)&packet, sizeof(packet));
 		socket->write(IntToArray(buf.size()));
 		socket->write(buf);
 		return socket->waitForBytesWritten();

@@ -29,8 +29,8 @@ ClientLogic::ClientLogic(){
 		connectDialog, SLOT(connectResult(int)),
 		Qt::QueuedConnection);
 
-	// connectDialog->setModal(true);
-	// connectDialog->show();
+	connectDialog->setModal(true);
+	connectDialog->show();
 }
 
 ClientLogic::~ClientLogic(){
@@ -72,8 +72,12 @@ void ClientLogic::requestConnect(const QString& ip){
 	}else{
 		qDebug() << "IP accepted";
 
-		clientNetwork->connectToHost(ip);
-
-		emit connectResult(0);
+		if(clientNetwork->connectToHost(ip)){
+			qDebug() << "Connected";
+			emit connectResult(0);
+		}else{
+			qDebug() << "Failed";
+			emit connectResult(2);
+		}
 	}
 }
