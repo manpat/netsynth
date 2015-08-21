@@ -82,6 +82,7 @@ void ServerLogic::HandleData(QByteArray data, u32 id) {
 		}else{
 			inst->scheduler->NoteOff(note);
 		}
+		
 	}else if(type.packetType == 1){ // Set scale
 		assert(data.size() >= (s32)sizeof(PacketScale));
 		auto packet = reinterpret_cast<const PacketScale*>((const char*)data);

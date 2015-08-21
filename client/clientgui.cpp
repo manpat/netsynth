@@ -152,7 +152,7 @@ bool ClientGUI::eventFilter(QObject*, QEvent* event) {
 		auto keyevent = static_cast<QKeyEvent*>(event);
 		if(keyevent->isAutoRepeat()) return false;
 
-		auto note = keyboardMap.FindNote(keyevent->nativeScanCode());
+		auto note = keyboardMap.FindNote(keyevent->key());
 		if (note.first != -100) {
 			emit notifyNoteChange(note.first, note.second, 1);
 		}
@@ -161,7 +161,7 @@ bool ClientGUI::eventFilter(QObject*, QEvent* event) {
 		auto keyevent = static_cast<QKeyEvent*>(event);
 		if(keyevent->isAutoRepeat()) return false;
 
-		auto note = keyboardMap.FindNote(keyevent->nativeScanCode());
+		auto note = keyboardMap.FindNote(keyevent->key());
 		if (note.first != -100) {
 			emit notifyNoteChange(note.first, note.second, 0);
 		}
