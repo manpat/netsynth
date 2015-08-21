@@ -1,4 +1,5 @@
 #include "moc_fmodmanager.h"
+#include <QtCore/QDebug>
 #include <iostream>
 #include <cmath>
 
@@ -25,6 +26,14 @@ void FmodManager::run(){
 	}
 
 	cfmod(system->init(100, FMOD_INIT_NORMAL, nullptr));
+	cfmod(system->createDSPByType(FMOD_DSP_TYPE_COMPRESSOR, &compressor));
+	cfmod(system->getMasterChannelGroup(&mastergroup));
+	
+	cfmod(compressor->setParameterFloat(FMOD_DSP_COMPRESSOR_THRESHOLD, -13));
+	cfmod(compressor->setParameterFloat(FMOD_DSP_COMPRESSOR_ATTACK, 0.5));
+	cfmod(compressor->setBypass(false));
+	cfmod(mastergroup->addDSP(0, compressor));
+	
 	mutex.unlock();
 
 	emit ready();
@@ -37,7 +46,7 @@ void FmodManager::run(){
 		msleep(30);
 	}
 
-	std::cout << "FmodManager stopped" << std::endl;
+	qDebug() << "FmodManager stopped";
 	emit finished();
 }
 

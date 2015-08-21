@@ -33,4 +33,26 @@ enum class Notes : u8 {
 	Count = (Gs+1)-A,
 };
 
+enum class Parameters : u8{
+	// Mode
+	Waveform,
+	EnvelopeType,
+
+	// Param
+	Detune,
+	PulseWidth,
+	Attack,
+	Decay,
+	Sustain,
+	Release,
+
+	Tempo,
+};
+
+struct PacketType {
+	u8 packetType : 2;
+	u8 secondary : 1;
+	u8 param : 5;
+};
+
 #endif

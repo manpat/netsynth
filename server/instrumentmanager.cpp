@@ -25,9 +25,9 @@ Instrument* InstrumentManager::NewInstrument(u32 id){
 	desc.userdata = inst;
 
 	cfmod(fmod->createDSP(&desc, &inst->dsp));
-	cfmod(inst->dsp->setChannelFormat(FMOD_CHANNELMASK_MONO,1,FMOD_SPEAKERMODE_MONO));
+	cfmod(inst->dsp->setChannelFormat(FMOD_CHANNELMASK_MONO, 1, FMOD_SPEAKERMODE_MONO));
 
-	cfmod(fmod->playDSP(inst->dsp, nullptr /*channel group*/, false, &inst->channel));
+	cfmod(fmod->playDSP(inst->dsp, fmodManager->getMasterChannelGroup(), false, &inst->channel));
 	////// END DSP
 
 	inst->scheduler = new NoteScheduler();
@@ -46,7 +46,7 @@ void InstrumentManager::DestroyInstrument(u32 id){
 
 	delete it->second;
 	clientInstruments.erase(it);
-}	
+}
 
 FMOD_RESULT F_CALLBACK InstrumentManager::GeneratorFunction(
 	FMOD_DSP_STATE* state, f32*, f32* outbuffer, u32 length, s32, s32*){
@@ -60,22 +60,6 @@ FMOD_RESULT F_CALLBACK InstrumentManager::GeneratorFunction(
 	void* ud = nullptr;
 	cfmod(thisdsp->getUserData(&ud));
 	auto& inst = *static_cast<Instrument*>(ud);
-
-	static bool go = false;
-	if(inst.scheduler->time > 3.1 && !go){
-		go = true;
-		inst.scheduler->NoteOff(128-12);
-		inst.scheduler->NoteOff(128-8);
-		inst.scheduler->NoteOff(128-1);
-		
-		inst.scheduler->quantisation = QuantisationSetting::Triplet;
-		inst.scheduler->NoteOn(128+7);
-		inst.scheduler->NoteOn(128+4, 0.4);
-		inst.scheduler->NoteOn(128, 0.8);
-		inst.scheduler->NoteOn(128-5, 1.0);
-		inst.scheduler->NoteOn(128-12, 1.5);
-		inst.scheduler->NoteOn(128-8, 2.0);
-	}
 
 	for(u32 i = 0; i < length; ++i){
 		outbuffer[i] = inst.Generate(inc);

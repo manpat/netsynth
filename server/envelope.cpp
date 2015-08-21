@@ -53,6 +53,8 @@ f32 Envelope::Generate(f32 phase, NoteInfo& note){
 			note.envFlags &= ~(1<<id);
 			return 0.0;
 		}
+
+		default: throw "Invalid envelope";
 	}
 
 	return 0.0; // No envelope

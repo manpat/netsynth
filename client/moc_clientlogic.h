@@ -18,8 +18,6 @@ protected:
 public:
 	ClientLogic();
 	~ClientLogic();
-	
-	bool eventFilter(QObject*, QEvent*) override;
 
 public slots:
 	void requestConnect(const QString&);

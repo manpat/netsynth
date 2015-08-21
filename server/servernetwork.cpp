@@ -21,10 +21,7 @@ void ServerNetwork::newConnection() {
 		connect(socket, SIGNAL(disconnected()), SLOT(disconnected()));
 
 		QByteArray *buffer = new QByteArray();
-		qint32 *s = new qint32(0);
-
 		buffers.insert(socket, buffer);
-		//sizes.insert(socket, s);
 
 		qDebug() << "Connected to " << socket->peerName() << " at " << socket->peerAddress() << ":" << socket->peerPort();
 	}
@@ -33,7 +30,6 @@ void ServerNetwork::newConnection() {
 void ServerNetwork::disconnected() {
 	QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
 	QByteArray *buffer = buffers.value(socket);
-	//qint32 *s = sizes.value(socket);
 
 	qDebug() << "Disconnected from " << socket->peerName() << " at " << socket->peerAddress() << ":" << socket->peerPort();
 
@@ -45,7 +41,6 @@ void ServerNetwork::disconnected() {
 void ServerNetwork::readyRead() {
 	QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
 	QByteArray *buffer = buffers.value(socket);
-	//qint32 size = *(sizes.value(socket));
 	qint32 size = socket->bytesAvailable();
 
 	while (socket->bytesAvailable() > 0) {

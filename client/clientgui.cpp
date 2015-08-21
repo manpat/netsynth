@@ -5,6 +5,8 @@
 #include <QtGui/QGroupBox>
 // #include <QtGui/QVBoxLayout>
 // #include <QtGui/QGridLayout>
+#include <QtGui/QKeyEvent>
+#include <QtCore/QDebug>
 
 #include "argslot.h"
 #include "customdial.h"
@@ -116,6 +118,29 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 	addTab(oscillatorTab, "Oscillators");
 	addTab(envelopeTab, "Envelopes");
 	addTab(serverTab, "Server");
+
+	installEventFilter(this);
+}
+
+bool ClientGUI::eventFilter(QObject*, QEvent* event) {
+	if(event->type() == QEvent::KeyPress){
+		auto keyevent = static_cast<QKeyEvent*>(event);
+		if(keyevent->isAutoRepeat()) return false;
+
+		// qDebug() << keyevent->text();
+		emit notifyNoteChange(0, 0, 1);
+		
+	}else if(event->type() == QEvent::KeyRelease){
+		auto keyevent = static_cast<QKeyEvent*>(event);
+		if(keyevent->isAutoRepeat()) return false;
+
+		emit notifyNoteChange(0, 0, 0);
+
+	}else{
+		return false;
+	}
+
+	return true;
 }
 
 void ClientGUI::osc1WaveformChange(int v){
@@ -125,30 +150,38 @@ void ClientGUI::osc1WaveformChange(int v){
 		case OscillatorWaveform::Square: oscWaveforms[0]->setText("Square"); break;
 		case OscillatorWaveform::Triangle: oscWaveforms[0]->setText("Triangle"); break;
 		case OscillatorWaveform::Saw: oscWaveforms[0]->setText("Saw"); break;
-		default: oscWaveforms[0]->setText("unknown"); break;
+		default: oscWaveforms[0]->setText("unknown"); return;
 	}
+
+	emit notifyModeChange(Parameters::Waveform, false, v);
 }
 void ClientGUI::osc2WaveformChange(int v){
 	switch((OscillatorWaveform)v){
-		case OscillatorWaveform::None: oscWaveforms[0]->setText("None"); break;
-		case OscillatorWaveform::Sine: oscWaveforms[0]->setText("Sine"); break;
-		case OscillatorWaveform::Square: oscWaveforms[0]->setText("Square"); break;
-		case OscillatorWaveform::Triangle: oscWaveforms[0]->setText("Triangle"); break;
-		case OscillatorWaveform::Saw: oscWaveforms[0]->setText("Saw"); break;
-		default: oscWaveforms[1]->setText("unknown"); break;
+		case OscillatorWaveform::None: oscWaveforms[1]->setText("None"); break;
+		case OscillatorWaveform::Sine: oscWaveforms[1]->setText("Sine"); break;
+		case OscillatorWaveform::Square: oscWaveforms[1]->setText("Square"); break;
+		case OscillatorWaveform::Triangle: oscWaveforms[1]->setText("Triangle"); break;
+		case OscillatorWaveform::Saw: oscWaveforms[1]->setText("Saw"); break;
+		default: oscWaveforms[1]->setText("unknown"); return;
 	}
+
+	emit notifyModeChange(Parameters::Waveform, true, v);
 }
 void ClientGUI::osc1DetuneChange(int v){
 	oscDetune[0]->setText(QString::number(v));
+	emit notifyParamChange(Parameters::Detune, false, v);
 }
 void ClientGUI::osc2DetuneChange(int v){
 	oscDetune[1]->setText(QString::number(v));
+	emit notifyParamChange(Parameters::Detune, true, v);
 }
 void ClientGUI::osc1PulseWidthChange(int v){
 	oscPulseWidth[0]->setText(QString("%1%").arg(v));
+	emit notifyParamChange(Parameters::PulseWidth, false, v/100.f);
 }
 void ClientGUI::osc2PulseWidthChange(int v){
 	oscPulseWidth[1]->setText(QString("%1%").arg(v));
+	emit notifyParamChange(Parameters::PulseWidth, true, v/100.f);
 }
 
 
@@ -159,20 +192,26 @@ void ClientGUI::env1TypeChange(int v){
 		case EnvelopeType::Linear:	envType[0]->setText("Linear"); break;
 		case EnvelopeType::AR:		envType[0]->setText("AR"); break;
 		case EnvelopeType::ADSR:	envType[0]->setText("ADSR"); break;
-		default: envType[0]->setText("unknown"); break;
+		default: envType[0]->setText("unknown"); return;
 	}
+
+	emit notifyModeChange(Parameters::EnvelopeType, false, v);
 }
 void ClientGUI::env1AttackChange(int v){
 	envAttack[0]->setText(QString("%1ms").arg(v));
+	emit notifyParamChange(Parameters::Attack, false, v/1000.f);
 }
 void ClientGUI::env1DecayChange(int v){
 	envDecay[0]->setText(QString("%1ms").arg(v));
+	emit notifyParamChange(Parameters::Decay, false, v/1000.f);
 }
 void ClientGUI::env1SustainChange(int v){
 	envSustain[0]->setText(QString("%1%").arg(v));
+	emit notifyParamChange(Parameters::Sustain, false, v/100.f);
 }
 void ClientGUI::env1ReleaseChange(int v){
 	envRelease[0]->setText(QString("%1ms").arg(v));
+	emit notifyParamChange(Parameters::Release, false, v/1000.f);
 }
 
 void ClientGUI::env2TypeChange(int v){
@@ -182,20 +221,26 @@ void ClientGUI::env2TypeChange(int v){
 		case EnvelopeType::Linear:	envType[1]->setText("Linear"); break;
 		case EnvelopeType::AR:		envType[1]->setText("AR"); break;
 		case EnvelopeType::ADSR:	envType[1]->setText("ADSR"); break;
-		default: envType[1]->setText("unknown"); break;
+		default: envType[1]->setText("unknown"); return;
 	}
+
+	emit notifyModeChange(Parameters::EnvelopeType, true, v);
 }
 void ClientGUI::env2AttackChange(int v){
 	envAttack[1]->setText(QString("%1ms").arg(v));
+	emit notifyParamChange(Parameters::Attack, true, v/1000.f);
 }
 void ClientGUI::env2DecayChange(int v){
 	envDecay[1]->setText(QString("%1ms").arg(v));
+	emit notifyParamChange(Parameters::Decay, true, v/1000.f);
 }
 void ClientGUI::env2SustainChange(int v){
 	envSustain[1]->setText(QString("%1%").arg(v));
+	emit notifyParamChange(Parameters::Sustain, true, v/100.f);
 }
 void ClientGUI::env2ReleaseChange(int v){
 	envRelease[1]->setText(QString("%1ms").arg(v));
+	emit notifyParamChange(Parameters::Release, true, v/1000.f);
 }
 
 void ClientGUI::servScaleChange(int v){
@@ -212,9 +257,12 @@ void ClientGUI::servScaleChange(int v){
 		case Notes::Fs:  servScale->setText("F#"); break;
 		case Notes::G :  servScale->setText("G"); break;
 		case Notes::Gs:  servScale->setText("G#"); break;
-		default: servScale->setText("unknown"); break;
+		default: servScale->setText("unknown"); return;
 	}
+
+	emit notifyScaleChange(ScaleType::Pentatonic, (Notes)v);
 }
 void ClientGUI::servTempoChange(int v){
 	servTempo->setText(QString("%1bps").arg(v));
+	emit notifyParamChange(Parameters::Tempo, false, v);
 }
