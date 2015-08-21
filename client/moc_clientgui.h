@@ -25,6 +25,9 @@ public:
 	AnalogDial* envSustain[2];
 	AnalogDial* envRelease[2];
 
+	DiscreteDial* instQuantise;
+	AnalogDial* instVolume;
+
 	DiscreteDial* servScale;
 	AnalogDial* servTempo;
 
@@ -56,6 +59,9 @@ public slots:
 
 	void servScaleChange(int);
 	void servTempoChange(int);
+
+	void instQuantiseChange(int);
+	void instVolumeChange(int);
 
 signals:
 	void notifyNoteChange(s8 degree, s8 octave, u8 state);

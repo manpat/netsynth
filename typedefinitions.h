@@ -26,6 +26,17 @@ enum class ScaleType : u8 {
 	Count,
 };
 
+enum class QuantisationSetting : u8 {
+	None,
+	Sixteenth,
+	Triplet,
+	Eighth,
+	Quarter,
+	Half,
+	Whole,
+	Count
+};
+
 enum class Notes : u8 {
 	A = 128, As, B, C, Cs, 
 	D, Ds, E, F, Fs, G, Gs,
@@ -38,6 +49,9 @@ enum class Parameters : u8{
 	Waveform,
 	EnvelopeType,
 
+	// Inst mode
+	Quantisation,
+
 	// Param
 	OctaveShift,
 	Detune,
@@ -47,6 +61,10 @@ enum class Parameters : u8{
 	Sustain,
 	Release,
 
+	// Inst param
+	Volume,
+
+	// Server param
 	Tempo,
 };
 

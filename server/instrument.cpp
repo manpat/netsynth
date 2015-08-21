@@ -47,6 +47,9 @@ void Instrument::SetParameter(Parameters p, u8 v, bool s){
 	case Parameters::EnvelopeType:
 		envelopes[s?1:0].type = (EnvelopeType)v;
 		break;
+	case Parameters::Quantisation:
+		scheduler->quantisation = (QuantisationSetting)v;
+		break;
 
 	default:
 		return;

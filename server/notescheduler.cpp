@@ -42,10 +42,23 @@ void NoteScheduler::NoteOff(u8 note){
 		// Will search for a note of the same value and that is held
 		return info.note == note && info.held(); 
 	});
+	if(ninfo == notes.end()) return;
 
-	if(ninfo != notes.end()){
-		ninfo->endTime = time;
+	f32 end = time;
+
+	switch(quantisation){
+	case QuantisationSetting::Sixteenth:end = snap(end, 4.0/16.0); break;
+	case QuantisationSetting::Triplet: 	end = snap(end, 4.0/12.0); break;
+	case QuantisationSetting::Eighth: 	end = snap(end, 4.0/ 8.0); break;
+	case QuantisationSetting::Quarter: 	end = snap(end, 4.0/ 4.0); break;
+	case QuantisationSetting::Half: 	end = snap(end, 4.0/ 2.0); break;
+	case QuantisationSetting::Whole: 	end = snap(end, 4.0/ 1.0); break;
+
+	case QuantisationSetting::None:
+	default: break;
 	}
+
+	ninfo->endTime = end;
 }
 
 void NoteScheduler::Clear(){

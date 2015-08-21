@@ -47,6 +47,7 @@ void ServerLogic::HandleData(QByteArray data, u32 id) {
 	auto inst = instrumentManager->GetInstrument(id);
 
 	auto type = *reinterpret_cast<const PacketType*>((const char*)data);
+	auto param = (Parameters)type.param;
 
 	if(type.packetType == 0){ // Note on/off
 		assert(data.size() >= (s32)sizeof(PacketNote));
@@ -72,16 +73,16 @@ void ServerLogic::HandleData(QByteArray data, u32 id) {
 		assert(data.size() >= (s32)sizeof(PacketModeConfig));
 		auto packet = reinterpret_cast<const PacketModeConfig*>((const char*)data);
 
-		inst->SetParameter((Parameters)type.param, packet->value, type.secondary);
+		inst->SetParameter(param, packet->value, type.secondary);
 
 	}else if(type.packetType == 3){ // Param change
 		assert(data.size() >= (s32)sizeof(PacketParamConfig));
 		auto packet = reinterpret_cast<const PacketParamConfig*>((const char*)data);
 
-		if((Parameters)type.param == Parameters::Tempo){
+		if(param == Parameters::Tempo){
 			tempo = packet->value;
 		}else{
-			inst->SetParameter((Parameters)type.param, packet->value, type.secondary);
+			inst->SetParameter(param, packet->value, type.secondary);
 		}
 	}
 }

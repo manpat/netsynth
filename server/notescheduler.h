@@ -2,6 +2,7 @@
 #define NOTESCHEDULER_H
 
 #include "common.h"
+#include "typedefinitions.h"
 #include <vector>
 #include <functional>
 
@@ -14,16 +15,6 @@ struct NoteInfo {
 	// held is only useful for envelopes that have a sustain.
 	bool held() const {return endTime < beginTime;}
 	bool dead() const {return envFlags == 0;}
-};
-
-enum class QuantisationSetting {
-	None,
-	Sixteenth,
-	Triplet,
-	Eighth,
-	Quarter,
-	Half,
-	Whole,
 };
 
 struct NoteScheduler {

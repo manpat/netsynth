@@ -18,11 +18,11 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 
 	auto oscillatorTab = new QWidget();
 	auto envelopeTab = new QWidget();
-	auto serverTab = new QWidget();
+	auto miscTab = new QWidget();
 
 	oscillatorTab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	envelopeTab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	serverTab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	miscTab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
 	{
 		auto set = new QVBoxLayout();
@@ -117,36 +117,77 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 	}
 
 	{
-		auto box = new QHBoxLayout();
+		auto set = new QHBoxLayout();
+		{
+			auto box = new QVBoxLayout();
+			instQuantise = new DiscreteDial();
+			instQuantise->setColor("#dd3");
+			instQuantise->setSteps((int)QuantisationSetting::Count);
 
-		servScale = new DiscreteDial();
-		servScale->setColor("#dd3");
-		servScale->setRange((int)Notes::A, (int)Notes::Gs);
+			instVolume = new AnalogDial();
 
-		servTempo = new AnalogDial();
-		servTempo->setRange(40, 240);
+			box->addWidget(instQuantise);
+			box->addWidget(instVolume);
 
-		box->addWidget(servScale);
-		box->addWidget(servTempo);
+			auto oscbox = new QGroupBox("Instrument");
+			oscbox->setStyleSheet("QGroupBox::title { subcontrol-position: hcenter; }");
+			oscbox->setLayout(box);
+			set->addWidget(oscbox);
 
-		connect(servScale, SIGNAL(valueChanged(int)), this, SLOT(servScaleChange(int)));
-		connect(servTempo, SIGNAL(valueChanged(int)), this, SLOT(servTempoChange(int)));
+			connect(instQuantise, SIGNAL(valueChanged(int)), this, SLOT(instQuantiseChange(int)));
+			connect(instVolume, SIGNAL(valueChanged(int)), this, SLOT(instVolumeChange(int)));
+		}
 
-		servScale->setValue((int)Notes::B);
-		servScale->setValue((int)Notes::A);
-		servTempo->setValue(60);
+		{
+			auto box = new QVBoxLayout();
+			servScale = new DiscreteDial();
+			servScale->setColor("#dd3");
+			servScale->setRange((int)Notes::A, (int)Notes::Gs);
+			// TODO: Scale type
 
-		box->setContentsMargins(20, 20, 20, 20);
-		serverTab->setLayout(box);
+			servTempo = new AnalogDial();
+			servTempo->setRange(40, 240);
+
+			box->addWidget(servScale);
+			box->addWidget(servTempo);
+
+			auto oscbox = new QGroupBox("Server");
+			oscbox->setStyleSheet("QGroupBox::title { subcontrol-position: hcenter; }");
+			oscbox->setLayout(box);
+			set->addWidget(oscbox);
+
+			connect(servScale, SIGNAL(valueChanged(int)), this, SLOT(servScaleChange(int)));
+			connect(servTempo, SIGNAL(valueChanged(int)), this, SLOT(servTempoChange(int)));
+
+			servScale->setValue((int)Notes::B);
+			servScale->setValue((int)Notes::A);
+			servTempo->setValue(60);
+		}
+
+		set->setContentsMargins(20, 20, 20, 20);
+		miscTab->setLayout(set);
 	}
 
 	addTab(oscillatorTab, "Oscillators");
 	addTab(envelopeTab, "Envelopes");
-	addTab(serverTab, "Server");
+	addTab(miscTab, "Miscellaneous");
 
 	installEventFilter(this);
 }
 
+/*
+	                                             
+	 ad88888ba  88                               
+	d8"     "8b 88              ,d               
+	Y8,         88              88               
+	`Y8aaaaa,   88  ,adPPYba, MM88MMM ,adPPYba,  
+	  `"""""8b, 88 a8"     "8a  88    I8[    ""  
+	        `8b 88 8b       d8  88     `"Y8ba,   
+	Y8a     a8P 88 "8a,   ,a8"  88,   aa    ]8I  
+	 "Y88888P"  88  `"YbbdP"'   "Y888 `"YbbdP"'  
+	                                             
+	                                             
+*/
 bool ClientGUI::eventFilter(QObject*, QEvent* event) {
 	if(event->type() == QEvent::KeyPress){
 		auto keyevent = static_cast<QKeyEvent*>(event);
@@ -311,4 +352,43 @@ void ClientGUI::servScaleChange(int v){
 void ClientGUI::servTempoChange(int v){
 	servTempo->setText(QString("%1bps").arg(v));
 	emit notifyParamChange(Parameters::Tempo, false, v);
+}
+
+void ClientGUI::instQuantiseChange(int v){
+	switch((QuantisationSetting)v){
+		case QuantisationSetting::None:
+			instQuantise->setText("None");
+			break;
+			
+		case QuantisationSetting::Sixteenth:
+			instQuantise->setText("1/16");
+			break;
+
+		case QuantisationSetting::Triplet:
+			instQuantise->setText("1/12");
+			break;
+
+		case QuantisationSetting::Eighth:
+			instQuantise->setText("1/8");
+			break;
+
+		case QuantisationSetting::Quarter:
+			instQuantise->setText("1/4");
+			break;
+
+		case QuantisationSetting::Half:
+			instQuantise->setText("1/2");
+			break;
+
+		case QuantisationSetting::Whole:
+			instQuantise->setText("1/1");
+			break;
+
+		default: instQuantise->setText("unknown"); return;
+	}
+
+	emit notifyModeChange(Parameters::Quantisation, false, v);
+}
+void ClientGUI::instVolumeChange(int v){
+
 }
