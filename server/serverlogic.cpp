@@ -96,11 +96,18 @@ void ServerLogic::HandleData(QByteArray data, u32 id) {
 		qDebug() << "\tsecondary?" << type.secondary;
 		qDebug() << "Mode change" << type.param << "to" << packet->value;
 
+		inst->SetParameter((Parameters)type.param, packet->value, type.secondary);
+
 	}else if(type.packetType == 3){ // Param change
 		assert(data.size() >= (s32)sizeof(PacketParamConfig));
 		auto packet = reinterpret_cast<const PacketParamConfig*>((const char*)data);
 		qDebug() << "\tsecondary?" << type.secondary;
 		qDebug() << "Param change" << type.param << "to" << packet->value;
 
+		if((Parameters)type.param == Parameters::Tempo){
+			tempo = packet->value;
+		}else{
+			inst->SetParameter((Parameters)type.param, packet->value, type.secondary);
+		}
 	}
 }

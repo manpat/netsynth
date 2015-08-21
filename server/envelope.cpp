@@ -40,7 +40,7 @@ f32 Envelope::Generate(f32 phase, NoteInfo& note){
 			if(position < attack){
 				return position/attack;
 
-			}else if(position-attack < decay){
+			}else if(position-attack <= decay){
 				return 1.0 - (position-attack)/decay *(1.0-sustain);
 
 			}else if(note.held()){

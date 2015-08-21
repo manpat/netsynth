@@ -2,7 +2,7 @@
 #include "common.h"
 #include <cmath>
 
-f32 Oscillator::Generate(f64 phase, f32 frequency){
+f32 Oscillator::Generate(f64 phase, f64 frequency){
 	switch(waveform){
 		case OscillatorWaveform::Sine:
 			return std::sin(M_PI*2.0*(frequency * detune * octave)*phase);

@@ -10,7 +10,7 @@ struct Oscillator {
 	f32 detune = 1.0;
 	f32 pulsewidth = 0.5;
 
-	f32 Generate(f64 phase, f32 frequency);
+	f32 Generate(f64 phase, f64 frequency);
 };
 
 #endif
