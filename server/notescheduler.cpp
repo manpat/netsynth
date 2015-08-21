@@ -11,7 +11,7 @@ void NoteScheduler::Update(f32 t){
 		return n.dead();
 	});
 
-	notes.erase(nend, end);
+	notes.erase(nend, end); // This crashes the server when the client crashes (think it's only when server is in debug mode)
 }
 
 static f32 snap(f32 v, f32 amt = 1.0){

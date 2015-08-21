@@ -62,6 +62,7 @@ public:
 
 signals:
 	void ready();
+	void UpdateVisualizer();
 
 };
 

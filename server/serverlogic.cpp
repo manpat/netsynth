@@ -1,4 +1,5 @@
 #include "moc_serverlogic.h"
+#include "moc_servergui.h"
 #include "instrumentmanager.h"
 #include "instrument.h"
 #include "notescheduler.h"
@@ -10,9 +11,10 @@ Scale ServerLogic::scale;
 f32 ServerLogic::tempo = 60.0;
 
 ServerLogic::ServerLogic(){
-	setWindowTitle("Server");
-	resize(200, 200);
-	show();
+	serverGUI = new ServerGUI();
+	serverGUI->setWindowTitle("Server");
+	serverGUI->resize(800, 400);
+	serverGUI->show();
 
 	serverNetwork = new ServerNetwork();
 
@@ -25,6 +27,11 @@ ServerLogic::ServerLogic(){
 
 	connect(serverNetwork, SIGNAL(ClientConnect(u32)), this, SLOT(ClientConnected(u32)));
 	connect(serverNetwork, SIGNAL(ClientDisconnect(u32)), this, SLOT(ClientDisconnected(u32)));
+
+	connect(serverNetwork, SIGNAL(ClientConnect(u32)), serverGUI, SLOT(AddSlider(u32)));
+	connect(serverNetwork, SIGNAL(ClientDisconnect(u32)), serverGUI, SLOT(RemoveSlider(u32)));
+
+	connect(&fmodManager, SIGNAL(UpdateVisualizer()), this, SLOT(UpdateVisualizer()));
 }
 
 ServerLogic::~ServerLogic(){
@@ -84,5 +91,11 @@ void ServerLogic::HandleData(QByteArray data, u32 id) {
 		}else{
 			inst->SetParameter(param, packet->value, type.secondary);
 		}
+	}
+}
+
+void ServerLogic::UpdateVisualizer() {
+	for (int i = 0; i < instrumentManager->clientInstruments.size(); i++) {
+		serverGUI->UpdateSlider(i, (int)(abs(instrumentManager->clientInstruments.at(i)->currentAmplitude * 100)));
 	}
 }

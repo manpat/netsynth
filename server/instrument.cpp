@@ -36,7 +36,9 @@ f32 Instrument::Generate(f64 dt){
 	});
 
 	phase += dt;
-	return o * 0.5;
+
+	currentAmplitude = o * 0.5;
+	return currentAmplitude;
 }
 
 void Instrument::SetParameter(Parameters p, u8 v, bool s){

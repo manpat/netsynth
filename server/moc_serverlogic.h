@@ -6,12 +6,14 @@
 #include "scale.h"
 #include "moc_fmodmanager.h"
 #include "moc_servernetwork.h"
+#include "moc_servergui.h"
 
 class InstrumentManager;
 
 class ServerLogic : public QWidget {
 	Q_OBJECT
 protected:
+	ServerGUI* serverGUI;
 	FmodManager fmodManager;
 	InstrumentManager* instrumentManager;
 	ServerNetwork* serverNetwork;
@@ -29,6 +31,7 @@ private slots:
 	void HandleData(QByteArray data, u32 id);
 	void ClientConnected(u32 id);
 	void ClientDisconnected(u32 id);
+	void UpdateVisualizer();
 };
 
 #endif

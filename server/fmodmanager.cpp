@@ -43,6 +43,9 @@ void FmodManager::run(){
 		mutex.lock();
 		cfmod(system->update());
 		mutex.unlock();
+
+		emit UpdateVisualizer();
+
 		msleep(30);
 	}
 

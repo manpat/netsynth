@@ -16,7 +16,6 @@ struct InstrumentManager {
 
 	Instrument* NewInstrument(u32);
 	Instrument* GetInstrument(u32);
-	bool InstrumentExists(u32);
 	void DestroyInstrument(u32);
 
 	void ForEachInstrument(std::function<void(Instrument&)>);
