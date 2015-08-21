@@ -14,6 +14,8 @@ public:
 
 signals:
 	void DataReceived(QByteArray, u32);
+	void ClientConnect(u32);
+	void ClientDisconnect(u32);
 
 private slots:
 	void newConnection();

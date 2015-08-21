@@ -21,6 +21,8 @@ void ServerNetwork::newConnection() {
 		QTcpSocket *socket = server->nextPendingConnection();
 		s32 clientId = clientManager->AddClient(socket);
 
+		emit ClientConnect(clientId);
+
 		connect(socket, SIGNAL(readyRead()), SLOT(readyRead()));
 		connect(socket, SIGNAL(disconnected()), SLOT(disconnected()));
 
@@ -34,8 +36,11 @@ void ServerNetwork::newConnection() {
 void ServerNetwork::disconnected() {
 	QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
 	QByteArray *buffer = buffers.value(socket);
+	auto clientId = clientManager->GetClient(socket);
 
-	qDebug() << "Disconnected from client #" << clientManager->GetClient(socket) << " " << socket->peerName() << " at " << socket->peerAddress() << ":" << socket->peerPort();
+	emit ClientDisconnect(clientId);
+
+	qDebug() << "Disconnected from client #" << clientId << " " << socket->peerName() << " at " << socket->peerAddress() << ":" << socket->peerPort();
 
 	clientManager->RemoveClient(socket);
 	socket->deleteLater();

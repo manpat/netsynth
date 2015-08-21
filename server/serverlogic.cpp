@@ -20,6 +20,8 @@ ServerLogic::ServerLogic(){
 
 	connect(&fmodManager, SIGNAL(ready()), this, SLOT(fmodready()));
 	connect(serverNetwork, SIGNAL(DataReceived(QByteArray, u32)), this, SLOT(HandleData(QByteArray, u32)));
+
+	connect(serverNetwork, SIGNAL(ClientConnect(u32)), this, SLOT(ClientConnected(u32)));
 }
 
 ServerLogic::~ServerLogic(){
