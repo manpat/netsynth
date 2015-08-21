@@ -19,7 +19,7 @@ ServerLogic::ServerLogic(){
 	scale.ConstructScale(Notes::A, ScaleType::Major);
 
 	connect(&fmodManager, SIGNAL(ready()), this, SLOT(fmodready()));
-	connect(serverNetwork, SIGNAL(dataReceived(QByteArray)), this, SLOT(handleData(QByteArray)));
+	connect(serverNetwork, SIGNAL(DataReceived(QByteArray, u32)), this, SLOT(HandleData(QByteArray, u32)));
 }
 
 ServerLogic::~ServerLogic(){
@@ -29,6 +29,7 @@ ServerLogic::~ServerLogic(){
 }
 
 void ServerLogic::fmodready(){
+	/*
 	auto inst = instrumentManager->NewInstrument(1);
 
 	inst->oscillators[0].waveform = OscillatorWaveform::Square;
@@ -49,16 +50,26 @@ void ServerLogic::fmodready(){
 	inst->envelopes[1].release = 1.0;
 
 	std::cout << "Instrument created" << std::endl;
+	*/
 }
 
-void ServerLogic::handleData(QByteArray buffer) {
-	auto data = (const char*)buffer;
-	auto type = reinterpret_cast<const PacketType*>(data)[0];
+void ServerLogic::ClientConnected(u32 id) {
+	instrumentManager->NewInstrument(id);
+}
+
+void ServerLogic::HandleData(QByteArray data, u32 id) {
+	auto inst = instrumentManager->GetInstrument(id);
+
+	auto type = reinterpret_cast<const PacketType*>((const char*)data)[0];
 	qDebug() << "Packet" << type.packetType;
 	qDebug() << "\tsecondary?" << type.secondary;
 	qDebug() << "\tparam" << type.param;
 
-	for (int i = 0; i < buffer.size(); i++){
-		qDebug() << (int)buffer[i];
+	if(type.packetType == 0){
+		inst->scheduler->NoteOn(scale.GetNote((int)data[2], (int)data[3]));
 	}
+	
+	// for (int i = 0; i < data.size(); i++){
+	// 	qDebug() << (int)data[i];
+	// }
 }

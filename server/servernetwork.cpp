@@ -1,14 +1,16 @@
 #include "moc_servernetwork.h"
+
+#include "instrumentmanager.h"
 #include "packet.h"
 #include <iostream>
 
 static inline qint32 ArrayToInt(QByteArray source);
 
 ServerNetwork::ServerNetwork(QObject *parent) : QObject(parent) {
-	server = new QTcpServer(this);
+	clientManager = new ClientManager();
 
+	server = new QTcpServer(this);
 	connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
-	
 	server->listen(QHostAddress::Any, 1337);
 
 	qDebug() << "Listening on port 1337";
@@ -17,13 +19,15 @@ ServerNetwork::ServerNetwork(QObject *parent) : QObject(parent) {
 void ServerNetwork::newConnection() {
 	while (server->hasPendingConnections()) {
 		QTcpSocket *socket = server->nextPendingConnection();
+		s32 clientId = clientManager->AddClient(socket);
+
 		connect(socket, SIGNAL(readyRead()), SLOT(readyRead()));
 		connect(socket, SIGNAL(disconnected()), SLOT(disconnected()));
 
 		QByteArray *buffer = new QByteArray();
 		buffers.insert(socket, buffer);
 
-		qDebug() << "Connected to " << socket->peerName() << " at " << socket->peerAddress() << ":" << socket->peerPort();
+		qDebug() << "Connected to client #" << clientId << " " << socket->peerName() << " at " << socket->peerAddress() << ":" << socket->peerPort();
 	}
 }
 
@@ -31,24 +35,21 @@ void ServerNetwork::disconnected() {
 	QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
 	QByteArray *buffer = buffers.value(socket);
 
-	qDebug() << "Disconnected from " << socket->peerName() << " at " << socket->peerAddress() << ":" << socket->peerPort();
+	qDebug() << "Disconnected from client #" << clientManager->GetClient(socket) << " " << socket->peerName() << " at " << socket->peerAddress() << ":" << socket->peerPort();
 
+	clientManager->RemoveClient(socket);
 	socket->deleteLater();
 	delete buffer;
-	//delete s;
 }
 
 void ServerNetwork::readyRead() {
 	QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
+	u32 clientId = clientManager->GetClient(socket);
 	QByteArray *buffer = buffers.value(socket);
 	qint32 size = socket->bytesAvailable();
 
 	while (socket->bytesAvailable() > 0) {
 		buffer->append(socket->readAll());
-
-		//for (int i = 0; i < buffer->size(); i++) {
-		//	qDebug() << i << ":" << (int)(buffer->at(i));
-		//}
 
 		while ((size == 0 && buffer->size() >= 4) || (size > 0 && buffer->size() >= size)) {
 			if (size == 0 && buffer->size() >= 4) {
@@ -60,7 +61,7 @@ void ServerNetwork::readyRead() {
 				buffer->remove(0, size);
 				size = 0;
 
-				emit dataReceived(data);
+				emit DataReceived(data, clientId);
 			}
 		}
 	}

@@ -26,7 +26,8 @@ public:
 
 private slots:
 	void fmodready();
-	void handleData(QByteArray data);
+	void HandleData(QByteArray data, u32 id);
+	void ClientConnected(u32 id);
 };
 
 #endif

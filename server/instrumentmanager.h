@@ -14,6 +14,8 @@ struct InstrumentManager {
 	std::map<u32, Instrument*> clientInstruments;
 
 	Instrument* NewInstrument(u32);
+	Instrument* GetInstrument(u32);
+	bool InstrumentExists(u32);
 	void DestroyInstrument(u32);
 
 private:
