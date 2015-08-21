@@ -19,7 +19,7 @@ ServerLogic::ServerLogic(){
 	scale.ConstructScale(Notes::A, ScaleType::Major);
 
 	connect(&fmodManager, SIGNAL(ready()), this, SLOT(fmodready()));
-	connect(serverNetwork, SIGNAL(dataReceived(QByteArray)), this, SLOT(handleData(QByteArray)));
+	connect(serverNetwork, SIGNAL(DataReceived(QByteArray, u32)), this, SLOT(HandleData(QByteArray, u32)));
 }
 
 ServerLogic::~ServerLogic(){
@@ -29,6 +29,7 @@ ServerLogic::~ServerLogic(){
 }
 
 void ServerLogic::fmodready(){
+	/*
 	auto inst = instrumentManager->NewInstrument(1);
 
 	inst->scheduler->quantisation = QuantisationSetting::Eighth;
@@ -55,9 +56,18 @@ void ServerLogic::fmodready(){
 	inst->envelopes[1].release = 1.0;
 
 	std::cout << "Instrument created" << std::endl;
+	*/
 }
 
-void ServerLogic::handleData(QByteArray data) {
+void ServerLogic::ClientConnected(u32 id) {
+	instrumentManager->NewInstrument(id);
+}
+
+void ServerLogic::HandleData(QByteArray data, u32 id) {
+	auto inst = instrumentManager->GetInstrument(id);
+
+	inst->scheduler->NoteOn(scale.GetNote((int)data[2], (int)data[3]));
+	
 	for (int i = 0; i < data.size(); i++){
 		qDebug() << (int)data[i];
 	}

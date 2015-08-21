@@ -38,6 +38,15 @@ Instrument* InstrumentManager::NewInstrument(u32 id){
 	return inst;
 }
 
+Instrument* InstrumentManager::GetInstrument(u32 id)
+{
+	auto it = clientInstruments.find(id);
+	if (it != clientInstruments.end()) {
+		return it->second;
+	}
+	throw "GetInstrument error: Instrument doesn't exist";
+}
+
 void InstrumentManager::DestroyInstrument(u32 id){
 	auto it = clientInstruments.find(id);
 	if(it == clientInstruments.end()){

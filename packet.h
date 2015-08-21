@@ -17,7 +17,7 @@ public:
 class PacketParamConfig {
 public:
 	u8 paramId;
-	float value;
+	f32 value;
 };
 
 class PacketModeConfig {
