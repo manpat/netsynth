@@ -28,6 +28,7 @@ private slots:
 	void fmodready();
 	void HandleData(QByteArray data, u32 id);
 	void ClientConnected(u32 id);
+	void ClientDisconnected(u32 id);
 };
 
 #endif

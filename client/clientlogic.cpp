@@ -15,6 +15,8 @@ ClientLogic::ClientLogic(){
 	clientGUI->resize(800, 400);
 	clientGUI->show();
 
+	clientNetwork = new ClientNetwork();
+
 	connect(clientGUI, SIGNAL(notifyNoteChange(s8,s8,u8)), this, SLOT(noteChange(s8,s8,u8)));
 	connect(clientGUI, SIGNAL(notifyModeChange(Parameters,bool,u8)),
 		this, SLOT(modeChange(Parameters,bool,u8)));
@@ -22,8 +24,6 @@ ClientLogic::ClientLogic(){
 		this, SLOT(paramChange(Parameters,bool,f32)));
 	connect(clientGUI, SIGNAL(notifyScaleChange(ScaleType,Notes)),
 		this, SLOT(scaleChange(ScaleType,Notes)));
-
-	clientNetwork = new ClientNetwork();
 
 	auto connectDialog = new ConnectDialog(clientGUI);
 	connect(connectDialog, SIGNAL(rejected()), qApp, SLOT(quit()));

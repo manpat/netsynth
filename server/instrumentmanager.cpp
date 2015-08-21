@@ -34,6 +34,15 @@ Instrument* InstrumentManager::NewInstrument(u32 id){
 	inst->envelopes[0].id = 0;
 	inst->envelopes[1].id = 1;
 
+	inst->oscillators[0].waveform = OscillatorWaveform::Sine;
+	inst->oscillators[0].octave = 1.0;
+	inst->oscillators[0].detune = 1.0;
+	inst->envelopes[0].type = EnvelopeType::ADSR;
+	inst->envelopes[0].attack = 0.1;
+	inst->envelopes[0].decay = 0.2;
+	inst->envelopes[0].sustain = 0.7;
+	inst->envelopes[0].release = 0.7;
+
 	clientInstruments[id] = inst;
 	return inst;
 }
@@ -41,7 +50,8 @@ Instrument* InstrumentManager::NewInstrument(u32 id){
 Instrument* InstrumentManager::GetInstrument(u32 id){
 	auto it = clientInstruments.find(id);
 	if (it == clientInstruments.end()) {
-		throw "GetInstrument error: Instrument doesn't exist";
+		// throw "GetInstrument error: Instrument doesn't exist";
+		return nullptr;
 	}
 
 	return it->second;
@@ -55,6 +65,12 @@ void InstrumentManager::DestroyInstrument(u32 id){
 
 	delete it->second;
 	clientInstruments.erase(it);
+}
+
+void InstrumentManager::ForEachInstrument(std::function<void(Instrument&)> func){
+	for(auto& p: clientInstruments){
+		func(*p.second);
+	}
 }
 
 FMOD_RESULT F_CALLBACK InstrumentManager::GeneratorFunction(

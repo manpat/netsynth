@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include <map>
+#include <functional>
 
 #include <fmod.hpp>
 
@@ -17,6 +18,8 @@ struct InstrumentManager {
 	Instrument* GetInstrument(u32);
 	bool InstrumentExists(u32);
 	void DestroyInstrument(u32);
+
+	void ForEachInstrument(std::function<void(Instrument&)>);
 
 private:
 	static FMOD_RESULT F_CALLBACK GeneratorFunction(

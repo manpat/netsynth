@@ -52,6 +52,12 @@ void NoteScheduler::Clear(){
 	notes.clear();
 }
 
+void NoteScheduler::SoftClear(){
+	for(auto& ni: notes){
+		if(ni.held()) ni.endTime = time;
+	}
+}
+
 void NoteScheduler::ForEachActive(std::function<void (NoteInfo&)> func){
 	for(auto& ni: notes){
 		if(ni.beginTime > time) continue;

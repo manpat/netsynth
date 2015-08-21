@@ -38,6 +38,7 @@ struct NoteScheduler {
 	void NoteOn(u8, f32 = 0.0);
 	void NoteOff(u8);
 	void Clear();
+	void SoftClear();
 
 	void ForEachActive(std::function<void (NoteInfo&)>);
 };

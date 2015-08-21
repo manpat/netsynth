@@ -24,6 +24,7 @@ ServerLogic::ServerLogic(){
 	connect(serverNetwork, SIGNAL(DataReceived(QByteArray, u32)), this, SLOT(HandleData(QByteArray, u32)));
 
 	connect(serverNetwork, SIGNAL(ClientConnect(u32)), this, SLOT(ClientConnected(u32)));
+	connect(serverNetwork, SIGNAL(ClientDisconnect(u32)), this, SLOT(ClientDisconnected(u32)));
 }
 
 ServerLogic::~ServerLogic(){
@@ -60,6 +61,9 @@ void ServerLogic::fmodready(){
 void ServerLogic::ClientConnected(u32 id) {
 	instrumentManager->NewInstrument(id);
 }
+void ServerLogic::ClientDisconnected(u32 id) {
+	instrumentManager->DestroyInstrument(id);
+}
 
 void ServerLogic::HandleData(QByteArray data, u32 id) {
 	auto inst = instrumentManager->GetInstrument(id);
@@ -82,6 +86,9 @@ void ServerLogic::HandleData(QByteArray data, u32 id) {
 		assert(data.size() >= (s32)sizeof(PacketScale));
 		auto packet = reinterpret_cast<const PacketScale*>((const char*)data);
 		scale.ConstructScale(packet->rootNote, packet->scaleType);
+		instrumentManager->ForEachInstrument([](Instrument& i){
+			i.scheduler->SoftClear();
+		});
 
 	}else if(type.packetType == 2){ // Mode change
 		assert(data.size() >= (s32)sizeof(PacketModeConfig));
