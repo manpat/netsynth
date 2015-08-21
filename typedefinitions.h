@@ -39,6 +39,7 @@ enum class Parameters : u8{
 	EnvelopeType,
 
 	// Param
+	OctaveShift,
 	Detune,
 	PulseWidth,
 	Attack,

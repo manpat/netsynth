@@ -16,21 +16,21 @@ ClientLogic::ClientLogic(){
 	clientGUI->show();
 
 	connect(clientGUI, SIGNAL(notifyNoteChange(s8,s8,u8)), this, SLOT(noteChange(s8,s8,u8)));
-	connect(clientGUI, SIGNAL(notifyModeChange(Parameters,bool,u8)), 
+	connect(clientGUI, SIGNAL(notifyModeChange(Parameters,bool,u8)),
 		this, SLOT(modeChange(Parameters,bool,u8)));
-	connect(clientGUI, SIGNAL(notifyParamChange(Parameters,bool,f32)), 
+	connect(clientGUI, SIGNAL(notifyParamChange(Parameters,bool,f32)),
 		this, SLOT(paramChange(Parameters,bool,f32)));
-	connect(clientGUI, SIGNAL(notifyScaleChange(ScaleType,Notes)), 
+	connect(clientGUI, SIGNAL(notifyScaleChange(ScaleType,Notes)),
 		this, SLOT(scaleChange(ScaleType,Notes)));
 
 	clientNetwork = new ClientNetwork();
-	
+
 	auto connectDialog = new ConnectDialog(clientGUI);
 	connect(connectDialog, SIGNAL(rejected()), qApp, SLOT(quit()));
-	connect(connectDialog, SIGNAL(requestConnect(const QString&)), 
+	connect(connectDialog, SIGNAL(requestConnect(const QString&)),
 		this, SLOT(requestConnect(const QString&)));
 
-	connect(this, SIGNAL(connectResult(int)), 
+	connect(this, SIGNAL(connectResult(int)),
 		connectDialog, SLOT(connectResult(int)),
 		Qt::QueuedConnection);
 
@@ -87,11 +87,19 @@ void ClientLogic::modeChange(Parameters paramId, bool secondary, u8 modeValue){
 
 	packet.packetType = 2;
 	packet.secondary = secondary;
-	packet.param = paramId;
-	packet.value = modeValue;	
+	packet.param = (u8)paramId;
+	packet.value = modeValue;
 
-	clientNetwork->writeData(packet);	
+	clientNetwork->writeData(packet);
 }
 void ClientLogic::paramChange(Parameters paramId, bool secondary, f32 paramValue){
-	qDebug() << "Param" << (int)paramId << "changed:" << paramValue << (secondary?"secondary":"");
+	PacketParamConfig packet;
+
+	packet.packetType = 3;
+	packet.secondary = secondary;
+	packet.param = (u8)paramId;
+	packet.value = paramValue;
+
+	clientNetwork->writeData(packet);
+
 }

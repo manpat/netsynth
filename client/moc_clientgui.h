@@ -12,6 +12,7 @@ class ClientGUI : public QTabWidget {
 	Q_OBJECT
 public:
 	DiscreteDial* oscWaveforms[2];
+	DiscreteDial* oscOctave[2];
 	AnalogDial* oscDetune[2];
 	AnalogDial* oscPulseWidth[2];
 
@@ -31,6 +32,8 @@ public:
 public slots:
 	void osc1WaveformChange(int);
 	void osc2WaveformChange(int);
+	void osc1OctaveChange(int);
+	void osc2OctaveChange(int);
 	void osc1DetuneChange(int);
 	void osc2DetuneChange(int);
 	void osc1PulseWidthChange(int);

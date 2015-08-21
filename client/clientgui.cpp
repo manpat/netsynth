@@ -34,19 +34,28 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			oscWaveforms[i]->setColor("#dd3");
 			oscWaveforms[i]->setSteps((int)OscillatorWaveform::Count);
 
+			oscOctave[i] = new DiscreteDial();
+			oscOctave[i]->setRange(-2, 2);
+
 			oscDetune[i] = new AnalogDial();
 			oscPulseWidth[i] = new AnalogDial();
 
 			box->addWidget(oscWaveforms[i]);
+			box->addWidget(oscOctave[i]);
 			box->addWidget(oscDetune[i]);
 			box->addWidget(oscPulseWidth[i]);
 
 			connect(oscWaveforms[i], SIGNAL(valueChanged(int)), this, ARGSLOT(osc%1WaveformChange(int), i+1)));
+			connect(oscOctave[i], SIGNAL(valueChanged(int)), this, ARGSLOT(osc%1OctaveChange(int), i+1)));
 			connect(oscDetune[i], SIGNAL(valueChanged(int)), this, ARGSLOT(osc%1DetuneChange(int), i+1)));
 			connect(oscPulseWidth[i], SIGNAL(valueChanged(int)), this, ARGSLOT(osc%1PulseWidthChange(int), i+1)));
 
+			oscDetune[i]->setRange(-100, 100);
+
 			oscWaveforms[i]->setValue(1);
 			oscWaveforms[i]->setValue(0);
+			oscOctave[i]->setValue(1);
+			oscOctave[i]->setValue(0);
 			oscDetune[i]->setValue(1);
 			oscDetune[i]->setValue(0);
 			oscPulseWidth[i]->setValue(50);
@@ -55,6 +64,8 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			oscbox->setLayout(box);
 			set->addWidget(oscbox);
 		};
+
+		oscWaveforms[0]->setValue(1);
 
 		set->setContentsMargins(20, 20, 20, 20);
 		oscillatorTab->setLayout(set);
@@ -74,6 +85,10 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			envSustain[i] = new AnalogDial();
 			envRelease[i] = new AnalogDial();
 
+			envAttack [i]->setRange(5, 2000);
+			envDecay  [i]->setRange(5, 2000);
+			envRelease[i]->setRange(5, 6000);
+
 			box->addWidget(envType[i]);
 			box->addWidget(envAttack[i]);
 			box->addWidget(envDecay[i]);
@@ -89,6 +104,12 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			connect(envDecay[i], SIGNAL(valueChanged(int)), this, ARGSLOT(env%1DecayChange(int), i+1)));
 			connect(envSustain[i], SIGNAL(valueChanged(int)), this, ARGSLOT(env%1SustainChange(int), i+1)));
 			connect(envRelease[i], SIGNAL(valueChanged(int)), this, ARGSLOT(env%1ReleaseChange(int), i+1)));
+
+			envType[i]->setValue((int)EnvelopeType::ADSR);
+			envAttack[i]->setValue(10);
+			envDecay[i]->setValue(50);
+			envSustain[i]->setValue(70);
+			envRelease[i]->setValue(100);
 		}
 
 		set->setContentsMargins(20, 20, 20, 20);
@@ -111,6 +132,10 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 		connect(servScale, SIGNAL(valueChanged(int)), this, SLOT(servScaleChange(int)));
 		connect(servTempo, SIGNAL(valueChanged(int)), this, SLOT(servTempoChange(int)));
 
+		servScale->setValue((int)Notes::B);
+		servScale->setValue((int)Notes::A);
+		servTempo->setValue(60);
+
 		box->setContentsMargins(20, 20, 20, 20);
 		serverTab->setLayout(box);
 	}
@@ -129,7 +154,7 @@ bool ClientGUI::eventFilter(QObject*, QEvent* event) {
 
 		// qDebug() << keyevent->text();
 		emit notifyNoteChange(0, 0, 1);
-		
+
 	}else if(event->type() == QEvent::KeyRelease){
 		auto keyevent = static_cast<QKeyEvent*>(event);
 		if(keyevent->isAutoRepeat()) return false;
@@ -167,13 +192,29 @@ void ClientGUI::osc2WaveformChange(int v){
 
 	emit notifyModeChange(Parameters::Waveform, true, v);
 }
+void ClientGUI::osc1OctaveChange(int v){
+	if(v >= 0){
+		oscOctave[0]->setText(QString("+%1").arg(v));
+	}else{
+		oscOctave[0]->setText(QString("%1").arg(v));
+	}
+	emit notifyParamChange(Parameters::OctaveShift, false, std::pow(2.0, (f32)v));
+}
+void ClientGUI::osc2OctaveChange(int v){
+	if(v >= 0){
+		oscOctave[1]->setText(QString("+%1").arg(v));
+	}else{
+		oscOctave[1]->setText(QString("%1").arg(v));
+	}
+	emit notifyParamChange(Parameters::OctaveShift, true, std::pow(2.0, (f32)v));
+}
 void ClientGUI::osc1DetuneChange(int v){
-	oscDetune[0]->setText(QString::number(v));
-	emit notifyParamChange(Parameters::Detune, false, v);
+	oscDetune[0]->setText(QString("%1%").arg(v));
+	emit notifyParamChange(Parameters::Detune, false, std::pow(2.0, v/100.0));
 }
 void ClientGUI::osc2DetuneChange(int v){
-	oscDetune[1]->setText(QString::number(v));
-	emit notifyParamChange(Parameters::Detune, true, v);
+	oscDetune[1]->setText(QString("%1%").arg(v));
+	emit notifyParamChange(Parameters::Detune, true, std::pow(2.0, v/100.0));
 }
 void ClientGUI::osc1PulseWidthChange(int v){
 	oscPulseWidth[0]->setText(QString("%1%").arg(v));

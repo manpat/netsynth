@@ -51,8 +51,14 @@ void ServerLogic::fmodready(){
 	std::cout << "Instrument created" << std::endl;
 }
 
-void ServerLogic::handleData(QByteArray data) {
-	for (int i = 0; i < data.size(); i++){
-		qDebug() << (int)data[i];
+void ServerLogic::handleData(QByteArray buffer) {
+	auto data = (const char*)buffer;
+	auto type = reinterpret_cast<const PacketType*>(data)[0];
+	qDebug() << "Packet" << type.packetType;
+	qDebug() << "\tsecondary?" << type.secondary;
+	qDebug() << "\tparam" << type.param;
+
+	for (int i = 0; i < buffer.size(); i++){
+		qDebug() << (int)buffer[i];
 	}
 }
