@@ -4,6 +4,7 @@
 #include <QtGui/QTabWidget>
 #include "common.h"
 #include "typedefinitions.h"
+#include "keyboardmap.h"
 
 class DiscreteDial;
 class AnalogDial;
@@ -11,6 +12,8 @@ class AnalogDial;
 class ClientGUI : public QTabWidget {
 	Q_OBJECT
 public:
+	KeyboardMap keyboardMap;
+
 	DiscreteDial* oscWaveforms[2];
 	DiscreteDial* oscOctave[2];
 	AnalogDial* oscDetune[2];
