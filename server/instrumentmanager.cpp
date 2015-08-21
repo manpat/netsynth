@@ -37,11 +37,19 @@ Instrument* InstrumentManager::NewInstrument(u32 id){
 	inst->oscillators[0].waveform = OscillatorWaveform::Sine;
 	inst->oscillators[0].octave = 1.0;
 	inst->oscillators[0].detune = 1.0;
+	inst->oscillators[1].octave = 1.0;
+	inst->oscillators[1].detune = 1.0;
 	inst->envelopes[0].type = EnvelopeType::ADSR;
 	inst->envelopes[0].attack = 0.1;
 	inst->envelopes[0].decay = 0.2;
 	inst->envelopes[0].sustain = 0.7;
 	inst->envelopes[0].release = 0.7;
+
+	inst->envelopes[1].type = EnvelopeType::ADSR;
+	inst->envelopes[1].attack = 0.1;
+	inst->envelopes[1].decay = 0.2;
+	inst->envelopes[1].sustain = 0.7;
+	inst->envelopes[1].release = 0.7;
 
 	clientInstruments[id] = inst;
 	return inst;
