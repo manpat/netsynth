@@ -4,6 +4,8 @@
 #include "notescheduler.h"
 #include "packet.h"
 
+#include <cassert>
+
 Scale ServerLogic::scale;
 f32 ServerLogic::tempo = 60.0;
 
@@ -62,16 +64,36 @@ void ServerLogic::ClientConnected(u32 id) {
 void ServerLogic::HandleData(QByteArray data, u32 id) {
 	auto inst = instrumentManager->GetInstrument(id);
 
-	auto type = reinterpret_cast<const PacketType*>((const char*)data)[0];
+	auto type = *reinterpret_cast<const PacketType*>((const char*)data);
 	qDebug() << "Packet" << type.packetType;
-	qDebug() << "\tsecondary?" << type.secondary;
-	qDebug() << "\tparam" << type.param;
 
-	if(type.packetType == 0){
-		inst->scheduler->NoteOn(scale.GetNote((int)data[2], (int)data[3]));
+	if(type.packetType == 0){ // Note on/off
+		assert(data.size() >= (s32)sizeof(PacketNote));
+		auto packet = reinterpret_cast<const PacketNote*>((const char*)data);
+		auto note = scale.GetNote(packet->degree, packet->octave);
+		qDebug() << note;
+
+		if(packet->state){
+			inst->scheduler->NoteOn(note);
+		}else{
+			inst->scheduler->NoteOff(note);
+		}
+	}else if(type.packetType == 1){ // Set scale
+		assert(data.size() >= (s32)sizeof(PacketScale));
+		auto packet = reinterpret_cast<const PacketScale*>((const char*)data);
+		scale.ConstructScale(packet->rootNote, packet->scaleType);
+
+	}else if(type.packetType == 2){ // Mode change
+		assert(data.size() >= (s32)sizeof(PacketModeConfig));
+		auto packet = reinterpret_cast<const PacketModeConfig*>((const char*)data);
+		qDebug() << "\tsecondary?" << type.secondary;
+		qDebug() << "Mode change" << type.param << "to" << packet->value;
+
+	}else if(type.packetType == 3){ // Param change
+		assert(data.size() >= (s32)sizeof(PacketParamConfig));
+		auto packet = reinterpret_cast<const PacketParamConfig*>((const char*)data);
+		qDebug() << "\tsecondary?" << type.secondary;
+		qDebug() << "Param change" << type.param << "to" << packet->value;
+
 	}
-	
-	// for (int i = 0; i < data.size(); i++){
-	// 	qDebug() << (int)data[i];
-	// }
 }
