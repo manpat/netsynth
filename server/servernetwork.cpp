@@ -25,8 +25,6 @@ void ServerNetwork::newConnection() {
 		connect(socket, SIGNAL(disconnected()), SLOT(disconnected()));
 
 		QByteArray *buffer = new QByteArray();
-		qint32 *s = new qint32(0);
-
 		buffers.insert(socket, buffer);
 
 		qDebug() << "Connected to client #" << clientId << " " << socket->peerName() << " at " << socket->peerAddress() << ":" << socket->peerPort();

@@ -9,7 +9,7 @@ f32 ServerLogic::tempo = 60.0;
 
 ServerLogic::ServerLogic(){
 	setWindowTitle("Server");
-	resize(800, 600);
+	resize(200, 200);
 	show();
 
 	serverNetwork = new ServerNetwork();
@@ -31,12 +31,6 @@ ServerLogic::~ServerLogic(){
 void ServerLogic::fmodready(){
 	/*
 	auto inst = instrumentManager->NewInstrument(1);
-
-	inst->scheduler->quantisation = QuantisationSetting::Eighth;
-	inst->scheduler->NoteOn(scale.GetNote(0, -1));
-	inst->scheduler->NoteOn(scale.GetNote(2, -1), 0.5);
-	inst->scheduler->NoteOn(scale.GetNote(4, -1), 1.0);
-	inst->scheduler->NoteOn(scale.GetNote(7, -1), 1.5);
 
 	inst->oscillators[0].waveform = OscillatorWaveform::Square;
 	inst->oscillators[0].pulsewidth = 0.2;

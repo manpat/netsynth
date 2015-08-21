@@ -1,7 +1,6 @@
 #include "moc_clientlogic.h"
 
 #include <QtCore/QDebug>
-#include <QtGui/QKeyEvent>
 #include <QtGui/QApplication>
 #include <QtNetwork/QHostAddress>
 
@@ -16,7 +15,13 @@ ClientLogic::ClientLogic(){
 	clientGUI->resize(800, 400);
 	clientGUI->show();
 
-	clientGUI->installEventFilter(this);
+	connect(clientGUI, SIGNAL(notifyNoteChange(s8,s8,u8)), this, SLOT(noteChange(s8,s8,u8)));
+	connect(clientGUI, SIGNAL(notifyModeChange(Parameters,bool,u8)), 
+		this, SLOT(modeChange(Parameters,bool,u8)));
+	connect(clientGUI, SIGNAL(notifyParamChange(Parameters,bool,f32)), 
+		this, SLOT(paramChange(Parameters,bool,f32)));
+	connect(clientGUI, SIGNAL(notifyScaleChange(ScaleType,Notes)), 
+		this, SLOT(scaleChange(ScaleType,Notes)));
 
 	clientNetwork = new ClientNetwork();
 	
@@ -38,37 +43,6 @@ ClientLogic::~ClientLogic(){
 	clientNetwork->deleteLater();
 }
 
-bool ClientLogic::eventFilter(QObject* object, QEvent* event){
-	if(event->type() == QEvent::KeyPress){
-		auto keyevent = static_cast<QKeyEvent*>(event);
-		if(keyevent->isAutoRepeat()) return false;
-
-		PacketNote packetNote;
-
-		packetNote.degree = 2;
-		packetNote.octave = 0;
-		packetNote.state = 1;
-
-		clientNetwork->writeData(packetNote);
-
-	}else if(event->type() == QEvent::KeyRelease){
-		auto keyevent = static_cast<QKeyEvent*>(event);
-		if(keyevent->isAutoRepeat()) return false;
-
-		PacketNote packetNote;
-
-		packetNote.degree = 2;
-		packetNote.octave = 0;
-		packetNote.state = 0;
-
-		clientNetwork->writeData(packetNote);
-	}else{
-		return false;
-	}
-
-	return true;
-}
-
 void ClientLogic::requestConnect(const QString& ip){
 	if(ip.isNull()){
 		emit connectResult(1);
@@ -83,4 +57,41 @@ void ClientLogic::requestConnect(const QString& ip){
 			emit connectResult(2);
 		}
 	}
+}
+
+void ClientLogic::noteChange(s8 degree, s8 octave, u8 state){
+	PacketNote packet;
+	packet.packetType = 0;
+	packet.secondary = 0;
+	packet.param = 0;
+
+	packet.degree = degree;
+	packet.octave = octave;
+	packet.state = state;
+
+	clientNetwork->writeData(packet);
+}
+void ClientLogic::scaleChange(ScaleType sc, Notes n){
+	PacketScale packet;
+	packet.packetType = 1;
+	packet.secondary = 0;
+	packet.param = 0;
+
+	packet.scaleType = sc;
+	packet.rootNote = n;
+
+	clientNetwork->writeData(packet);
+}
+void ClientLogic::modeChange(Parameters paramId, bool secondary, u8 modeValue){
+	PacketModeConfig packet;
+
+	packet.packetType = 2;
+	packet.secondary = secondary;
+	packet.param = paramId;
+	packet.value = modeValue;	
+
+	clientNetwork->writeData(packet);	
+}
+void ClientLogic::paramChange(Parameters paramId, bool secondary, f32 paramValue){
+	qDebug() << "Param" << (int)paramId << "changed:" << paramValue << (secondary?"secondary":"");
 }

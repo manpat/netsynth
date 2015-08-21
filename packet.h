@@ -1,42 +1,28 @@
 #ifndef PACKET_H
 #define PACKET_H
 
+#include "common.h"
+#include "typedefinitions.h"
+
 #pragma pack(push, 1)
 
-#include "common.h"
-
-class PacketNote {
-private:
-	u8 type = 0;
-public:
+struct PacketNote : PacketType {
 	s8 degree;
 	s8 octave;
 	u8 state;
 };
 
-class PacketParamConfig {
-public:
-	u8 paramId;
+struct PacketParamConfig : PacketType {
 	f32 value;
 };
 
-class PacketModeConfig {
-	u8 modeId;
-	u8 mode;
+struct PacketModeConfig : PacketType {
+	u8 value;
 };
 
-class PacketScale {
-private:
-	u8 type = 1;
-public:
-	enum ScaleType : u8 {
-		Minor,
-		Major,
-		Pentatonic
-	};
-
+struct PacketScale : PacketType {
 	ScaleType scaleType;
-	s8 rootNote;
+	Notes rootNote;
 };
 
 #pragma pack(pop)

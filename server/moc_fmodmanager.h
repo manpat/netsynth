@@ -44,6 +44,8 @@ class FmodManager : public QThread {
 
 protected:
 	FMOD::System* system;
+	FMOD::ChannelGroup* mastergroup;
+	FMOD::DSP* compressor;
 	QMutex mutex;
 
 	bool running = false;
@@ -55,6 +57,7 @@ public:
 	void kill();
 
 	FmodSystemRef getSystem();
+	FMOD::ChannelGroup* getMasterChannelGroup() {return mastergroup;}
 	bool isRunning() const {return running;};
 
 signals:

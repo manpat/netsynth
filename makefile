@@ -50,5 +50,5 @@ clean:
 
 run: default
 	@echo "-- Running --"
-	# @server/build
-	@client/build
+	@server/build &
+	@client/build &

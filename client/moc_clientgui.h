@@ -3,6 +3,7 @@
 
 #include <QtGui/QTabWidget>
 #include "common.h"
+#include "typedefinitions.h"
 
 class DiscreteDial;
 class AnalogDial;
@@ -25,6 +26,7 @@ public:
 
 public:
 	ClientGUI(QWidget* = nullptr);
+	bool eventFilter(QObject*, QEvent*) override;
 
 public slots:
 	void osc1WaveformChange(int);
@@ -48,6 +50,12 @@ public slots:
 
 	void servScaleChange(int);
 	void servTempoChange(int);
+
+signals:
+	void notifyNoteChange(s8 degree, s8 octave, u8 state);
+	void notifyModeChange(Parameters paramId, bool secondary, u8 modeValue);
+	void notifyParamChange(Parameters paramId, bool secondary, f32 paramValue);
+	void notifyScaleChange(ScaleType, Notes);
 };
 
 #endif
