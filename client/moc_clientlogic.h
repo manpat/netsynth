@@ -22,6 +22,11 @@ public:
 public slots:
 	void requestConnect(const QString&);
 
+	void noteChange(s8 degree, s8 octave, u8 state);
+	void modeChange(Parameters paramId, bool secondary, u8 modeValue);
+	void paramChange(Parameters paramId, bool secondary, f32 paramValue);
+	void scaleChange(ScaleType, Notes);
+
 signals:
 	void connectResult(int);
 };
