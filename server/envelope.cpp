@@ -35,8 +35,10 @@ f32 Envelope::Generate(f32 phase, NoteInfo& note){
 		}
 
 		case EnvelopeType::ADSR:{
-			// auto diff = note.endTime - note.beginTime;
-			auto rpos = phase - note.endTime;
+			auto end = note.beginTime + attack + decay;
+			if(end < note.endTime) end = note.endTime;
+			
+			auto rpos = phase - end;
 
 			if(position <= attack){
 				return std::min(position/attack, 1.f);
@@ -44,12 +46,11 @@ f32 Envelope::Generate(f32 phase, NoteInfo& note){
 			}else if(position-attack <= decay){
 				return std::max(1.0 - (position-attack)/decay *(1.0-sustain), 0.0);
 
-			}else if(note.held() || rpos < 0){
+			}else if(note.held() || phase < note.endTime){
 				return sustain;
 
 			}else if(rpos < release){
 				return std::max((1.0-rpos/release)*sustain, 0.0);
-				// return sustain*(1.0 + (note.endTime - phase)/(release - note.beginTime));
 			}
 
 			note.envFlags &= ~(1<<id);
