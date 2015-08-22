@@ -102,8 +102,7 @@ void ServerLogic::HandleData(QByteArray data, u32 id) {
 }
 
 void ServerLogic::UpdateVisualizer() {
-	for (int i = 0; i < instrumentManager->clientInstruments.size(); i++) {
-		serverGUI->UpdateSlider(i, (int)
-			(std::log(instrumentManager->clientInstruments.at(i)->currentAmplitude+1.0)/2.0*100));
+	for (auto i : instrumentManager->clientInstruments) {
+		serverGUI->UpdateSlider(i.first, (int)(std::log(i.second->currentAmplitude+1.0)/2.0*100));
 	}
 }
