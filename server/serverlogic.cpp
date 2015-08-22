@@ -53,42 +53,50 @@ void ServerLogic::ClientDisconnected(u32 id) {
 void ServerLogic::HandleData(QByteArray data, u32 id) {
 	auto inst = instrumentManager->GetInstrument(id);
 
-	auto type = *reinterpret_cast<const PacketType*>((const char*)data);
-	auto param = (Parameters)type.param;
+	while(data.size() > 0){
+		auto type = *reinterpret_cast<const PacketType*>((const char*)data);
+		auto param = (Parameters)type.param;
 
-	if(type.packetType == 0){ // Note on/off
-		assert(data.size() >= (s32)sizeof(PacketNote));
-		auto packet = reinterpret_cast<const PacketNote*>((const char*)data);
-		auto note = scale.GetNote(packet->degree, packet->octave);
+		if(type.packetType == 0){ // Note on/off
+			assert(data.size() >= (s32)sizeof(PacketNote));
+			auto packet = reinterpret_cast<const PacketNote*>((const char*)data);
+			auto note = scale.GetNote(packet->degree, packet->octave);
 
-		if(packet->state){
-			inst->scheduler->NoteOn(note);
-		}else{
-			inst->scheduler->NoteOff(note);
-		}
+			if(packet->state){
+				inst->scheduler->NoteOn(note);
+			}else{
+				inst->scheduler->NoteOff(note);
+			}
 
-	}else if(type.packetType == 1){ // Set scale
-		assert(data.size() >= (s32)sizeof(PacketScale));
-		auto packet = reinterpret_cast<const PacketScale*>((const char*)data);
-		scale.ConstructScale(packet->rootNote, packet->scaleType);
-		instrumentManager->ForEachInstrument([](Instrument& i){
-			i.scheduler->SoftClear();
-		});
+			data.remove(0, sizeof(PacketNote));
 
-	}else if(type.packetType == 2){ // Mode change
-		assert(data.size() >= (s32)sizeof(PacketModeConfig));
-		auto packet = reinterpret_cast<const PacketModeConfig*>((const char*)data);
+		}else if(type.packetType == 1){ // Set scale
+			assert(data.size() >= (s32)sizeof(PacketScale));
+			auto packet = reinterpret_cast<const PacketScale*>((const char*)data);
+			scale.ConstructScale(packet->rootNote, packet->scaleType);
+			instrumentManager->ForEachInstrument([](Instrument& i){
+				i.scheduler->SoftClear();
+			});
 
-		inst->SetParameter(param, packet->value, type.secondary);
+			data.remove(0, sizeof(PacketScale));
 
-	}else if(type.packetType == 3){ // Param change
-		assert(data.size() >= (s32)sizeof(PacketParamConfig));
-		auto packet = reinterpret_cast<const PacketParamConfig*>((const char*)data);
+		}else if(type.packetType == 2){ // Mode change
+			assert(data.size() >= (s32)sizeof(PacketModeConfig));
+			auto packet = reinterpret_cast<const PacketModeConfig*>((const char*)data);
 
-		if(param == Parameters::Tempo){
-			tempo = packet->value;
-		}else{
 			inst->SetParameter(param, packet->value, type.secondary);
+			data.remove(0, sizeof(PacketModeConfig));
+
+		}else if(type.packetType == 3){ // Param change
+			assert(data.size() >= (s32)sizeof(PacketParamConfig));
+			auto packet = reinterpret_cast<const PacketParamConfig*>((const char*)data);
+
+			if(param == Parameters::Tempo){
+				tempo = packet->value;
+			}else{
+				inst->SetParameter(param, packet->value, type.secondary);
+			}
+			data.remove(0, sizeof(PacketParamConfig));
 		}
 	}
 }

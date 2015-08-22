@@ -52,10 +52,10 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			box->addWidget(oscDetune[i]);
 			box->addWidget(oscPulseWidth[i]);
 
-			connect(oscWaveforms[i], SIGNAL(valueChanged(int)), this, ARGSLOT(osc%1WaveformChange(int), i+1)));
-			connect(oscOctave[i], SIGNAL(valueChanged(int)), this, ARGSLOT(osc%1OctaveChange(int), i+1)));
-			connect(oscDetune[i], SIGNAL(valueChanged(int)), this, ARGSLOT(osc%1DetuneChange(int), i+1)));
-			connect(oscPulseWidth[i], SIGNAL(valueChanged(int)), this, ARGSLOT(osc%1PulseWidthChange(int), i+1)));
+			connect(oscWaveforms[i], SIGNAL(valueChanged(int)), this, ARGSLOT(osc%1WaveformChange(int), i+1)), Qt::QueuedConnection);
+			connect(oscOctave[i], SIGNAL(valueChanged(int)), this, ARGSLOT(osc%1OctaveChange(int), i+1)), Qt::QueuedConnection);
+			connect(oscDetune[i], SIGNAL(valueChanged(int)), this, ARGSLOT(osc%1DetuneChange(int), i+1)), Qt::QueuedConnection);
+			connect(oscPulseWidth[i], SIGNAL(valueChanged(int)), this, ARGSLOT(osc%1PulseWidthChange(int), i+1)), Qt::QueuedConnection);
 
 			oscDetune[i]->setRange(-100, 100);
 
@@ -234,7 +234,7 @@ void ClientGUI::SetDefaults(){
 		envAttack[i]->setValue(10);
 		envDecay[i]->setValue(50);
 		envSustain[i]->setValue(70);
-		envRelease[i]->setValue(100);
+		envRelease[i]->setValue(400);
 	}
 
 	instVolume->setValue(100);
@@ -245,7 +245,7 @@ void ClientGUI::SetDefaults(){
 	oscWaveforms[1]->setValue(1);
 	oscWaveforms[1]->setValue(0);
 	envType[0]->setValue((int)EnvelopeType::ADSR);
-	envType[1]->setValue((int)EnvelopeType::ADSR);
+	envType[1]->setValue((int)EnvelopeType::Linear);
 	envType[1]->setValue((int)EnvelopeType::None);
 }
 
