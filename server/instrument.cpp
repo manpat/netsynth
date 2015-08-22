@@ -28,14 +28,14 @@ f64 ntof(u8 n){
 f32 Instrument::Generate(f64 dt){
 	scheduler->Update(phase);
 	
-	currentAmplitude = 0.f;
+	f32 amp = 0.f;
 	f32 o = 0.0;
 	scheduler->ForEachActive([&](NoteInfo& ni){
 		auto freq = ntof(ni.note);
 		auto env1 = envelopes[0].Generate(phase, ni);
 		auto env2 = envelopes[1].Generate(phase, ni);
 
-		currentAmplitude += env1 + env2;
+		amp += env1 + env2;
 
 		o += oscillators[0].Generate(phase, freq) * env1;
 		o += oscillators[1].Generate(phase, freq) * env2;
@@ -43,7 +43,7 @@ f32 Instrument::Generate(f64 dt){
 
 	phase += dt;
 
-	currentAmplitude *= volume * 0.5;
+	currentAmplitude = amp * volume * 0.5;
 	o *= 0.5 * volume;
 	return o;
 }

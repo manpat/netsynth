@@ -48,7 +48,7 @@ f32 Envelope::Generate(f32 phase, NoteInfo& note){
 				return sustain;
 
 			}else if(rpos < release){
-				return std::max((1.0-rpos/release)/sustain, 0.0);
+				return std::max((1.0-rpos/release)*sustain, 0.0);
 				// return sustain*(1.0 + (note.endTime - phase)/(release - note.beginTime));
 			}
 
