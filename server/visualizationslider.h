@@ -1,9 +1,9 @@
 #ifndef VISUALIZATIONSLIDER_H
 #define VISUALIZATIONSLIDER_H
 
-#include <QSlider>
-#include <QPainter>
-#include <QStyleOptionSlider>
+#include <QtGui/QSlider>
+#include <QtGui/QPainter>
+#include <QtGui/QStyleOptionSlider>
 
 class VisualizationSlider : public QSlider {
 public:

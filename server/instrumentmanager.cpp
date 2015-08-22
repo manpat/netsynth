@@ -34,6 +34,8 @@ Instrument* InstrumentManager::NewInstrument(u32 id){
 	inst->envelopes[0].id = 0;
 	inst->envelopes[1].id = 1;
 
+	inst->volume = 1;
+
 	inst->oscillators[0].waveform = OscillatorWaveform::Sine;
 	inst->oscillators[0].octave = 1.0;
 	inst->oscillators[0].detune = 1.0;

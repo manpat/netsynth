@@ -24,9 +24,11 @@ void NoteScheduler::NoteOn(u8 note, f32 offset){
 
 	switch(quantisation){
 	case QuantisationSetting::Sixteenth:begin = snap(begin, 4.0/16.0); break;
-	case QuantisationSetting::Triplet: 	begin = snap(begin, 4.0/12.0); break;
+	case QuantisationSetting::Twelfth: 	begin = snap(begin, 4.0/12.0); break;
 	case QuantisationSetting::Eighth: 	begin = snap(begin, 4.0/ 8.0); break;
+	case QuantisationSetting::Sixth: 	begin = snap(begin, 4.0/ 6.0); break;
 	case QuantisationSetting::Quarter: 	begin = snap(begin, 4.0/ 4.0); break;
+	case QuantisationSetting::Triplet: 	begin = snap(begin, 4.0/ 3.0); break;
 	case QuantisationSetting::Half: 	begin = snap(begin, 4.0/ 2.0); break;
 	case QuantisationSetting::Whole: 	begin = snap(begin, 4.0/ 1.0); break;
 
@@ -48,9 +50,11 @@ void NoteScheduler::NoteOff(u8 note){
 
 	switch(quantisation){
 	case QuantisationSetting::Sixteenth:end = snap(end, 4.0/16.0); break;
-	case QuantisationSetting::Triplet: 	end = snap(end, 4.0/12.0); break;
+	case QuantisationSetting::Twelfth: 	end = snap(end, 4.0/12.0); break;
 	case QuantisationSetting::Eighth: 	end = snap(end, 4.0/ 8.0); break;
+	case QuantisationSetting::Sixth: 	end = snap(end, 4.0/ 6.0); break;
 	case QuantisationSetting::Quarter: 	end = snap(end, 4.0/ 4.0); break;
+	case QuantisationSetting::Triplet: 	end = snap(end, 4.0/ 3.0); break;
 	case QuantisationSetting::Half: 	end = snap(end, 4.0/ 2.0); break;
 	case QuantisationSetting::Whole: 	end = snap(end, 4.0/ 1.0); break;
 

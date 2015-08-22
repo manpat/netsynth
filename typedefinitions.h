@@ -29,9 +29,11 @@ enum class ScaleType : u8 {
 enum class QuantisationSetting : u8 {
 	None,
 	Sixteenth,
-	Triplet,
+	Twelfth,
 	Eighth,
+	Sixth,
 	Quarter,
+	Triplet,
 	Half,
 	Whole,
 	Count

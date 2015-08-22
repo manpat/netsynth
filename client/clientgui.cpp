@@ -33,12 +33,17 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			oscWaveforms[i] = new DiscreteDial();
 			oscWaveforms[i]->setColor("#dd3");
 			oscWaveforms[i]->setSteps((int)OscillatorWaveform::Count);
+			oscWaveforms[i]->setPageStep(1);
 
 			oscOctave[i] = new DiscreteDial();
 			oscOctave[i]->setRange(-2, 2);
+			oscOctave[i]->setPageStep(1);
 
 			oscDetune[i] = new AnalogDial();
 			oscPulseWidth[i] = new AnalogDial();
+
+			oscDetune[i]->setPageStep(1);
+			oscPulseWidth[i]->setPageStep(1);
 
 			box->addWidget(oscWaveforms[i]);
 			box->addWidget(oscOctave[i]);
@@ -136,6 +141,10 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 
 			connect(instQuantise, SIGNAL(valueChanged(int)), this, SLOT(instQuantiseChange(int)));
 			connect(instVolume, SIGNAL(valueChanged(int)), this, SLOT(instVolumeChange(int)));
+
+			instVolume->setValue(100);
+			instQuantise->setValue(1);
+			instQuantise->setValue(0);
 		}
 
 		{
@@ -359,12 +368,12 @@ void ClientGUI::instQuantiseChange(int v){
 		case QuantisationSetting::None:
 			instQuantise->setText("None");
 			break;
-			
+
 		case QuantisationSetting::Sixteenth:
 			instQuantise->setText("1/16");
 			break;
 
-		case QuantisationSetting::Triplet:
+		case QuantisationSetting::Twelfth:
 			instQuantise->setText("1/12");
 			break;
 
@@ -372,8 +381,16 @@ void ClientGUI::instQuantiseChange(int v){
 			instQuantise->setText("1/8");
 			break;
 
+		case QuantisationSetting::Sixth:
+			instQuantise->setText("1/6");
+			break;
+
 		case QuantisationSetting::Quarter:
 			instQuantise->setText("1/4");
+			break;
+
+		case QuantisationSetting::Triplet:
+			instQuantise->setText("1/3");
 			break;
 
 		case QuantisationSetting::Half:
@@ -390,5 +407,6 @@ void ClientGUI::instQuantiseChange(int v){
 	emit notifyModeChange(Parameters::Quantisation, false, v);
 }
 void ClientGUI::instVolumeChange(int v){
-
+	instVolume->setText(QString("%1%").arg(v));
+	emit notifyParamChange(Parameters::Volume, false, v/100.f);
 }

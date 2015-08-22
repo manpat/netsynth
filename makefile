@@ -16,8 +16,8 @@ endif
 .SUFFIXES:
 
 default: checkdirs
-	@make -j4 build -r --silent PREFIX=server
-	@make -j4 build -r --silent PREFIX=client
+	@make -j8 build -r --silent PREFIX=server
+	@make -j8 build -r --silent PREFIX=client
 
 build: $(OBJ)
 	@echo "-- Building $(PREFIX) --"

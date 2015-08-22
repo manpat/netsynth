@@ -2,6 +2,7 @@
 #include "notescheduler.h"
 #include "typedefinitions.h"
 #include <cmath>
+#include <QtCore/QDebug>
 
 Instrument::~Instrument(){
 	if(scheduler){
@@ -37,8 +38,10 @@ f32 Instrument::Generate(f64 dt){
 
 	phase += dt;
 
-	currentAmplitude = o * 0.5;
-	return currentAmplitude;
+	o *= 0.5 * volume;
+
+	currentAmplitude = o;
+	return o;
 }
 
 void Instrument::SetParameter(Parameters p, u8 v, bool s){
@@ -51,6 +54,7 @@ void Instrument::SetParameter(Parameters p, u8 v, bool s){
 		break;
 	case Parameters::Quantisation:
 		scheduler->quantisation = (QuantisationSetting)v;
+		scheduler->SoftClear();
 		break;
 
 	default:
@@ -80,6 +84,10 @@ void Instrument::SetParameter(Parameters p, f32 v, bool s){
 		break;
 	case Parameters::Release:
 		envelopes[s?1:0].release = v;
+		break;
+
+	case Parameters::Volume:
+		volume = v;
 		break;
 
 	default:

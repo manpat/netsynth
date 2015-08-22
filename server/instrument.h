@@ -13,6 +13,7 @@ struct Instrument {
 	Oscillator oscillators[2];
 	Envelope envelopes[2];
 	f64 phase = 0;
+	f32 volume = 1;
 	f32 currentAmplitude;
 
 	FMOD::Channel* channel;
