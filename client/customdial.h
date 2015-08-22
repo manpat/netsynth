@@ -13,11 +13,13 @@ public:
 	void setColor(const QColor&);
 	void setText(const QString&);
 	void setName(const QString&);
+	void setEnabled(bool);
 
 protected:
 	QColor color;
 	QString text;
 	QString name;
+	bool enabled;
 
 	void DrawText(QPainter*, const QRect&);
 };

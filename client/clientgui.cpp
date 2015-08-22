@@ -227,6 +227,10 @@ void ClientGUI::SetDefaults(){
 	oscWaveforms[0]->setValue(1);
 	oscWaveforms[1]->setValue(1);
 	oscWaveforms[1]->setValue(0);
+	envType[0]->setValue((int)EnvelopeType::ADSR);
+	envType[1]->setValue((int)EnvelopeType::AR);
+	envType[1]->setValue((int)EnvelopeType::None);
+
 	for(int i = 0; i < 2; i++){
 		oscOctave[i]->setValue(1);
 		oscOctave[i]->setValue(0);
@@ -234,7 +238,6 @@ void ClientGUI::SetDefaults(){
 		oscDetune[i]->setValue(0);
 		oscPulseWidth[i]->setValue(50);
 
-		envType[i]->setValue((int)EnvelopeType::ADSR);
 		envAttack[i]->setValue(10);
 		envDecay[i]->setValue(50);
 		envSustain[i]->setValue(70);
@@ -247,6 +250,8 @@ void ClientGUI::SetDefaults(){
 }
 
 void ClientGUI::osc1WaveformChange(int v){
+	oscPulseWidth[0]->setEnabled((OscillatorWaveform)v == OscillatorWaveform::Square);
+
 	switch((OscillatorWaveform)v){
 		case OscillatorWaveform::None: oscWaveforms[0]->setText("None"); break;
 		case OscillatorWaveform::Sine: oscWaveforms[0]->setText("Sine"); break;
@@ -259,6 +264,8 @@ void ClientGUI::osc1WaveformChange(int v){
 	emit notifyModeChange(Parameters::Waveform, false, v);
 }
 void ClientGUI::osc2WaveformChange(int v){
+	oscPulseWidth[1]->setEnabled((OscillatorWaveform)v == OscillatorWaveform::Square);
+
 	switch((OscillatorWaveform)v){
 		case OscillatorWaveform::None: oscWaveforms[1]->setText("None"); break;
 		case OscillatorWaveform::Sine: oscWaveforms[1]->setText("Sine"); break;
@@ -305,7 +312,24 @@ void ClientGUI::osc2PulseWidthChange(int v){
 
 
 void ClientGUI::env1TypeChange(int v){
-	switch((EnvelopeType)v){
+	env[0] = (EnvelopeType)v;
+	envDecay[0]->setEnabled(env[0] == EnvelopeType::ADSR);
+	envSustain[0]->setEnabled(env[0] == EnvelopeType::ADSR);
+
+	envAttack[0]->setEnabled(env[0] >= EnvelopeType::AR || env[0] == EnvelopeType::DC);
+	envRelease[0]->setEnabled(env[0] >= EnvelopeType::Linear);
+
+	if(env[0] == EnvelopeType::DC){
+		envAttack[0]->setText(QString("%1%").arg(envAttack[0]->value()));
+		envAttack[0]->setRange(0, 100);
+		envAttack[0]->setName("Value");
+	}else{
+		envAttack[0]->setText(QString("%1ms").arg(envAttack[0]->value()));
+		envAttack[0]->setRange(5, 2000);
+		envAttack[0]->setName("Attack");
+	}
+	
+	switch(env[0]){
 		case EnvelopeType::None:	envType[0]->setText("None"); break;
 		case EnvelopeType::DC:		envType[0]->setText("DC"); break;
 		case EnvelopeType::Linear:	envType[0]->setText("Linear"); break;
@@ -317,8 +341,13 @@ void ClientGUI::env1TypeChange(int v){
 	emit notifyModeChange(Parameters::EnvelopeType, false, v);
 }
 void ClientGUI::env1AttackChange(int v){
-	envAttack[0]->setText(QString("%1ms").arg(v));
-	emit notifyParamChange(Parameters::Attack, false, v/1000.f);
+	if(env[0] == EnvelopeType::DC){
+		envAttack[0]->setText(QString("%1%").arg(v));
+		emit notifyParamChange(Parameters::Attack, false, v/100.f);
+	}else{
+		envAttack[0]->setText(QString("%1ms").arg(v));
+		emit notifyParamChange(Parameters::Attack, false, v/1000.f);
+	}
 }
 void ClientGUI::env1DecayChange(int v){
 	envDecay[0]->setText(QString("%1ms").arg(v));
@@ -334,6 +363,23 @@ void ClientGUI::env1ReleaseChange(int v){
 }
 
 void ClientGUI::env2TypeChange(int v){
+	env[1] = (EnvelopeType)v;
+	envDecay[1]->setEnabled(env[1] == EnvelopeType::ADSR);
+	envSustain[1]->setEnabled(env[1] == EnvelopeType::ADSR);
+
+	envAttack[1]->setEnabled(env[1] >= EnvelopeType::AR || env[1] == EnvelopeType::DC);
+	envRelease[1]->setEnabled(env[1] >= EnvelopeType::Linear);
+
+	if(env[1] == EnvelopeType::DC){
+		envAttack[1]->setText(QString("%1%").arg(envAttack[1]->value()));
+		envAttack[1]->setRange(0, 100);
+		envAttack[1]->setName("Value");
+	}else{
+		envAttack[1]->setText(QString("%1ms").arg(envAttack[1]->value()));
+		envAttack[1]->setRange(5, 2000);
+		envAttack[1]->setName("Attack");
+	}
+	
 	switch((EnvelopeType)v){
 		case EnvelopeType::None:	envType[1]->setText("None"); break;
 		case EnvelopeType::DC:		envType[1]->setText("DC"); break;
@@ -346,8 +392,13 @@ void ClientGUI::env2TypeChange(int v){
 	emit notifyModeChange(Parameters::EnvelopeType, true, v);
 }
 void ClientGUI::env2AttackChange(int v){
-	envAttack[1]->setText(QString("%1ms").arg(v));
-	emit notifyParamChange(Parameters::Attack, true, v/1000.f);
+	if(env[1] == EnvelopeType::DC){
+		envAttack[1]->setText(QString("%1%").arg(v));
+		emit notifyParamChange(Parameters::Attack, false, v/100.f);
+	}else{
+		envAttack[1]->setText(QString("%1ms").arg(v));
+		emit notifyParamChange(Parameters::Attack, false, v/1000.f);
+	}
 }
 void ClientGUI::env2DecayChange(int v){
 	envDecay[1]->setText(QString("%1ms").arg(v));

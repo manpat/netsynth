@@ -11,7 +11,6 @@ int main(int ac, char** av){
 	try{
 		std::cout << "NetSynth" << std::endl;
 		QApplication a(ac, av);
-		// a.setFont(QFont("ubuntu"));
 
 		std::ifstream f("stylesheet.css");
 		if(!f) throw "Stylesheet open failed";

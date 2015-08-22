@@ -14,6 +14,7 @@ class ClientGUI : public QTabWidget {
 protected:
 	ScaleType scaleType;
 	Notes scaleRoot;
+	EnvelopeType env[2];
 
 public:
 	KeyboardMap keyboardMap;

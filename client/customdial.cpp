@@ -14,25 +14,36 @@ static void adaptFontSize(QPainter* painter, QFont& f, QRectF drawRect, QString 
 	f.setPointSizeF(f.pointSizeF()*factor);
 }
 
-BaseDial::BaseDial(QWidget* p) : QDial(p), color("#3d3"), text(""), name("") {}
+BaseDial::BaseDial(QWidget* p) : QDial(p), color("#3d3"), text(""), name(""), enabled(true) {}
 
 void BaseDial::setColor(const QColor& c){
 	color = c;
+	update();
 }
 void BaseDial::setText(const QString& c){
 	text = c;
+	update();
 }
 void BaseDial::setName(const QString& c){
 	name = c;
+	update();
+}
+void BaseDial::setEnabled(bool c){
+	enabled = c;
+	update();
 }
 
 void BaseDial::DrawText(QPainter* p, const QRect& r){
-	auto textRect = r.adjusted(30, 20,-30,-20);
+	auto color = QColor("#999");
+	if(!enabled) color = color.darker(200);
+
 	auto font = p->font();
+	p->setPen(color);
+
+	auto textRect = r.adjusted(30, 20,-30,-20);
 	font.setWeight(QFont::Bold);
 	adaptFontSize(p, font, textRect, text);
 	p->setFont(font);
-	p->setPen(QColor("#999"));
 	p->drawText(textRect, Qt::AlignCenter, text);
 
 	auto nameRect = r.adjusted(0, r.height()*88/100, 0, 0);
@@ -53,8 +64,12 @@ void AnalogDial::paintEvent(QPaintEvent*){
 	bool hover = style.state & QStyle::State_MouseOver;
 
 	p.setRenderHints(QPainter::Antialiasing|QPainter::TextAntialiasing);
-	QBrush brush("#333");
-	if(hover) brush.setColor("#393939");
+
+	QColor grey("#333");
+	if(!enabled) grey = grey.darker(120);
+
+	QBrush brush(grey);
+	if(hover) brush.setColor(grey.lighter(120));
 
 	auto diff = width() - height();
 	auto diffx = std::max(0, diff) / 2;
@@ -74,12 +89,14 @@ void AnalogDial::paintEvent(QPaintEvent*){
 	p.drawPie(r.adjusted(25, 25,-25,-25), startangle, -arcsize);
 
 	r.adjust(15, 15,-15,-15);
-	p.setPen(QPen(QColor("#333"), 15));
+	p.setPen(QPen(grey, 15));
 	p.drawArc(r, startangle, -arcsize);
 
-	if(hover) p.setPen(QPen(color.lighter(120), 15));
-	else p.setPen(QPen(color, 15));
-	p.drawArc(r, startangle, -arcsize*(value()-minimum())/(maximum()-minimum()));
+	if(enabled) {
+		if(hover) p.setPen(QPen(color.lighter(120), 15));
+		else p.setPen(QPen(color, 15));
+		p.drawArc(r, startangle, -arcsize*(value()-minimum())/(maximum()-minimum()));
+	}
 
 	DrawText(&p, textRect);
 }
@@ -102,8 +119,11 @@ void DiscreteDial::paintEvent(QPaintEvent*){
 	bool hover = style.state & QStyle::State_MouseOver;
 
 	p.setRenderHints(QPainter::Antialiasing|QPainter::TextAntialiasing);
-	QBrush brush("#333");
-	if(hover) brush.setColor("#393939");
+	QColor grey("#333");
+	if(!enabled) grey = grey.darker(120);
+
+	QBrush brush(grey);
+	if(hover) brush.setColor(grey.lighter(120));
 
 	auto diff = width() - height();
 	auto diffx = std::max(0, diff) / 2;
@@ -126,7 +146,7 @@ void DiscreteDial::paintEvent(QPaintEvent*){
 
 	r.adjust(15, 15,-15,-15);
 
-	p.setPen(QPen(QColor("#333"), 15));
+	p.setPen(QPen(grey, 15));
 	p.drawArc(r, startangle, -arcsize);
 
 	if(hover) p.setPen(QPen(color.lighter(120), 15));
