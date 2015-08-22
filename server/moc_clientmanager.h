@@ -18,6 +18,8 @@ public:
 	u32 GetClient(QTcpSocket* clientSocket);
 	void RemoveClient(QTcpSocket* clientSocket);
 
+	u32 GetClientCount();
+
 signals:
 	void ClientAdded(u32);
 	void ClientRemoved(u32);

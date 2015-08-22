@@ -40,3 +40,7 @@ void ClientManager::RemoveClient(QTcpSocket* clientSocket) {
 
 	clients.erase(it);
 }
+
+u32 ClientManager::GetClientCount() {
+	return clients.size();
+}

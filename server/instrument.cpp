@@ -26,6 +26,10 @@ f64 ntof(u8 n){
 }
 
 f32 Instrument::Generate(f64 dt){
+	if (!scheduler)
+	{
+		return 0.0f;
+	}
 	scheduler->Update(phase);
 	
 	f32 amp = 0.f;
@@ -46,6 +50,7 @@ f32 Instrument::Generate(f64 dt){
 	currentAmplitude = amp * volume * 0.5;
 	o *= 0.5 * volume;
 	return o;
+
 }
 
 void Instrument::SetParameter(Parameters p, u8 v, bool s){
