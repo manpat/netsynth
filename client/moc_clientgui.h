@@ -11,6 +11,10 @@ class AnalogDial;
 
 class ClientGUI : public QTabWidget {
 	Q_OBJECT
+protected:
+	ScaleType scaleType;
+	Notes scaleRoot;
+
 public:
 	KeyboardMap keyboardMap;
 
@@ -29,6 +33,7 @@ public:
 	AnalogDial* instVolume;
 
 	DiscreteDial* servScale;
+	DiscreteDial* servScaleType;
 	AnalogDial* servTempo;
 
 public:
@@ -36,6 +41,8 @@ public:
 	bool eventFilter(QObject*, QEvent*) override;
 
 public slots:
+	void SetDefaults();
+
 	void osc1WaveformChange(int);
 	void osc2WaveformChange(int);
 	void osc1OctaveChange(int);
@@ -58,6 +65,7 @@ public slots:
 	void env2ReleaseChange(int);
 
 	void servScaleChange(int);
+	void servScaleTypeChange(int);
 	void servTempoChange(int);
 
 	void instQuantiseChange(int);

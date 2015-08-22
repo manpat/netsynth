@@ -60,7 +60,6 @@ void ServerLogic::HandleData(QByteArray data, u32 id) {
 		assert(data.size() >= (s32)sizeof(PacketNote));
 		auto packet = reinterpret_cast<const PacketNote*>((const char*)data);
 		auto note = scale.GetNote(packet->degree, packet->octave);
-		qDebug() << note;
 
 		if(packet->state){
 			inst->scheduler->NoteOn(note);

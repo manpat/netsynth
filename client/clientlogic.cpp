@@ -51,6 +51,7 @@ void ClientLogic::requestConnect(const QString& ip){
 
 		if(clientNetwork->connectToHost(ip)){
 			qDebug() << "Connected";
+			clientGUI->SetDefaults();
 			emit connectResult(0);
 		}else{
 			qDebug() << "Failed";

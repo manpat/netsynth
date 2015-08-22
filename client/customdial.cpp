@@ -4,25 +4,42 @@
 #include <QtCore/QDebug>
 
 // http://stackoverflow.com/questions/2202717/for-qt-4-6-x-how-to-auto-size-text-to-fit-in-a-specified-width
-static void adaptFontSize(QPainter* painter, QRectF drawRect, QString text){
-	int flags = Qt::TextDontClip|Qt::TextWordWrap|Qt::AlignCenter;
+static void adaptFontSize(QPainter* painter, QFont& f, QRectF drawRect, QString text){
+	int flags = Qt::TextDontClip|Qt::TextWordWrap;
 	QRect fontBoundRect = 
 		painter->fontMetrics().boundingRect(drawRect.toRect(), flags, text);
 	float xFactor = drawRect.width() / fontBoundRect.width();
 	float yFactor = drawRect.height() / fontBoundRect.height();
 	float factor = xFactor < yFactor ? xFactor : yFactor;
-	QFont f = painter->font();
 	f.setPointSizeF(f.pointSizeF()*factor);
-	painter->setFont(f);
 }
 
-BaseDial::BaseDial(QWidget* p) : QDial(p), color("#3d3"), text("") {}
+BaseDial::BaseDial(QWidget* p) : QDial(p), color("#3d3"), text(""), name("") {}
 
 void BaseDial::setColor(const QColor& c){
 	color = c;
 }
 void BaseDial::setText(const QString& c){
 	text = c;
+}
+void BaseDial::setName(const QString& c){
+	name = c;
+}
+
+void BaseDial::DrawText(QPainter* p, const QRect& r){
+	auto textRect = r.adjusted(30, 20,-30,-20);
+	auto font = p->font();
+	font.setWeight(QFont::Bold);
+	adaptFontSize(p, font, textRect, text);
+	p->setFont(font);
+	p->setPen(QColor("#999"));
+	p->drawText(textRect, Qt::AlignCenter, text);
+
+	auto nameRect = r.adjusted(0, r.height()*88/100, 0, 0);
+	font.setWeight(QFont::Normal);
+	adaptFontSize(p, font, nameRect, name);
+	p->setFont(font);
+	p->drawText(nameRect, Qt::AlignCenter, name);
 }
 
 AnalogDial::AnalogDial(QWidget* p) : BaseDial(p) {}
@@ -42,10 +59,11 @@ void AnalogDial::paintEvent(QPaintEvent*){
 	auto diff = width() - height();
 	auto diffx = std::max(0, diff) / 2;
 	auto diffy = std::max(0,-diff) / 2;
-	const auto offy = 10;
+	const auto offy = 5;
 
 	auto r = style.rect;
 	r.adjust(diffx, diffy+offy,-diffx,-diffy+offy); // Squarify
+	auto textRect = r.adjusted(15, 5,-15,-5);
 
 	p.setPen(Qt::NoPen);
 	p.setBrush(brush);
@@ -63,19 +81,13 @@ void AnalogDial::paintEvent(QPaintEvent*){
 	else p.setPen(QPen(color, 15));
 	p.drawArc(r, startangle, -arcsize*(value()-minimum())/(maximum()-minimum()));
 
-	r.adjust(20, 20,-20,-20);
-	auto font = p.font();
-	font.setWeight(QFont::Bold);
-	font.setPointSize(16);
-	p.setFont(font);
-	adaptFontSize(&p, r, text);
-	p.setPen(QPen(QColor("#999"), 15));
-	p.drawText(r, Qt::AlignCenter, text);
+	DrawText(&p, textRect);
 }
 
 
 DiscreteDial::DiscreteDial(QWidget* p) : BaseDial(p) {
 	setSteps(5);
+	setPageStep(1);
 }
 void DiscreteDial::setSteps(int s){
 	setRange(0, s-1);
@@ -96,10 +108,11 @@ void DiscreteDial::paintEvent(QPaintEvent*){
 	auto diff = width() - height();
 	auto diffx = std::max(0, diff) / 2;
 	auto diffy = std::max(0,-diff) / 2;
-	const auto offy = 10;
+	const auto offy = 5;
 
 	auto r = style.rect;
 	r.adjust(diffx, diffy+offy,-diffx,-diffy+offy); // Squarify
+	auto textRect = r.adjusted(5, 5,-5,-5);
 
 	// Note: angles in 1/16ths of a degree
 	p.setPen(Qt::NoPen);
@@ -122,13 +135,5 @@ void DiscreteDial::paintEvent(QPaintEvent*){
 	auto perc = (value()-minimum())*barsize;
 	p.drawArc(r, startangle-perc-barsize, barsize);
 
-	r.adjust(20, 20,-20,-20);
-
-	auto font = p.font();
-	font.setWeight(QFont::Bold);
-	font.setPointSize(16);
-	p.setFont(font);
-	adaptFontSize(&p, r, text);
-	p.setPen(QPen(QColor("#999"), 15));
-	p.drawText(r, Qt::AlignCenter, text);
+	DrawText(&p, textRect);
 }

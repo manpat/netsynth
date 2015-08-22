@@ -33,17 +33,19 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			oscWaveforms[i] = new DiscreteDial();
 			oscWaveforms[i]->setColor("#dd3");
 			oscWaveforms[i]->setSteps((int)OscillatorWaveform::Count);
-			oscWaveforms[i]->setPageStep(1);
+			oscWaveforms[i]->setName("Waveform");
 
 			oscOctave[i] = new DiscreteDial();
 			oscOctave[i]->setRange(-2, 2);
-			oscOctave[i]->setPageStep(1);
+			oscOctave[i]->setName("Octave");
 
 			oscDetune[i] = new AnalogDial();
-			oscPulseWidth[i] = new AnalogDial();
-
 			oscDetune[i]->setPageStep(1);
+			oscDetune[i]->setName("Detune");
+
+			oscPulseWidth[i] = new AnalogDial();
 			oscPulseWidth[i]->setPageStep(1);
+			oscPulseWidth[i]->setName("PulseWidth");
 
 			box->addWidget(oscWaveforms[i]);
 			box->addWidget(oscOctave[i]);
@@ -57,20 +59,10 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 
 			oscDetune[i]->setRange(-100, 100);
 
-			oscWaveforms[i]->setValue(1);
-			oscWaveforms[i]->setValue(0);
-			oscOctave[i]->setValue(1);
-			oscOctave[i]->setValue(0);
-			oscDetune[i]->setValue(1);
-			oscDetune[i]->setValue(0);
-			oscPulseWidth[i]->setValue(50);
-
 			auto oscbox = new QGroupBox(QString("Oscillator %1").arg(i+1));
 			oscbox->setLayout(box);
 			set->addWidget(oscbox);
 		};
-
-		oscWaveforms[0]->setValue(1);
 
 		set->setContentsMargins(20, 20, 20, 20);
 		oscillatorTab->setLayout(set);
@@ -94,6 +86,12 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			envDecay  [i]->setRange(5, 2000);
 			envRelease[i]->setRange(5, 6000);
 
+			envType   [i]->setName("EnvelopeType");
+			envAttack [i]->setName("Attack");
+			envDecay  [i]->setName("Decay");
+			envSustain[i]->setName("Sustain");
+			envRelease[i]->setName("Release");
+
 			box->addWidget(envType[i]);
 			box->addWidget(envAttack[i]);
 			box->addWidget(envDecay[i]);
@@ -109,12 +107,6 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			connect(envDecay[i], SIGNAL(valueChanged(int)), this, ARGSLOT(env%1DecayChange(int), i+1)));
 			connect(envSustain[i], SIGNAL(valueChanged(int)), this, ARGSLOT(env%1SustainChange(int), i+1)));
 			connect(envRelease[i], SIGNAL(valueChanged(int)), this, ARGSLOT(env%1ReleaseChange(int), i+1)));
-
-			envType[i]->setValue((int)EnvelopeType::ADSR);
-			envAttack[i]->setValue(10);
-			envDecay[i]->setValue(50);
-			envSustain[i]->setValue(70);
-			envRelease[i]->setValue(100);
 		}
 
 		set->setContentsMargins(20, 20, 20, 20);
@@ -127,9 +119,11 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			auto box = new QVBoxLayout();
 			instQuantise = new DiscreteDial();
 			instQuantise->setColor("#dd3");
+			instQuantise->setName("Quantisation");
 			instQuantise->setSteps((int)QuantisationSetting::Count);
 
 			instVolume = new AnalogDial();
+			instVolume->setName("Volume");
 
 			box->addWidget(instQuantise);
 			box->addWidget(instVolume);
@@ -141,23 +135,28 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 
 			connect(instQuantise, SIGNAL(valueChanged(int)), this, SLOT(instQuantiseChange(int)));
 			connect(instVolume, SIGNAL(valueChanged(int)), this, SLOT(instVolumeChange(int)));
-
-			instVolume->setValue(100);
-			instQuantise->setValue(1);
-			instQuantise->setValue(0);
 		}
 
 		{
 			auto box = new QVBoxLayout();
+			auto scaleBox = new QHBoxLayout();
 			servScale = new DiscreteDial();
 			servScale->setColor("#dd3");
+			servScale->setName("Key");
 			servScale->setRange((int)Notes::A, (int)Notes::Gs);
-			// TODO: Scale type
+			
+			servScaleType = new DiscreteDial();
+			servScaleType->setColor("#dd3");
+			servScaleType->setName("Type");
+			servScaleType->setRange((int)ScaleType::Major, (int)ScaleType::Count-1);
 
 			servTempo = new AnalogDial();
 			servTempo->setRange(40, 240);
+			servTempo->setName("Tempo");
 
-			box->addWidget(servScale);
+			scaleBox->addWidget(servScale);
+			scaleBox->addWidget(servScaleType);
+			box->addLayout(scaleBox);
 			box->addWidget(servTempo);
 
 			auto oscbox = new QGroupBox("Server");
@@ -167,6 +166,7 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 
 			connect(servScale, SIGNAL(valueChanged(int)), this, SLOT(servScaleChange(int)));
 			connect(servTempo, SIGNAL(valueChanged(int)), this, SLOT(servTempoChange(int)));
+			connect(servScaleType, SIGNAL(valueChanged(int)), this, SLOT(servScaleTypeChange(int)));
 
 			servScale->setValue((int)Notes::B);
 			servScale->setValue((int)Notes::A);
@@ -221,6 +221,29 @@ bool ClientGUI::eventFilter(QObject*, QEvent* event) {
 	}
 
 	return true;
+}
+
+void ClientGUI::SetDefaults(){
+	oscWaveforms[0]->setValue(1);
+	oscWaveforms[1]->setValue(1);
+	oscWaveforms[1]->setValue(0);
+	for(int i = 0; i < 2; i++){
+		oscOctave[i]->setValue(1);
+		oscOctave[i]->setValue(0);
+		oscDetune[i]->setValue(1);
+		oscDetune[i]->setValue(0);
+		oscPulseWidth[i]->setValue(50);
+
+		envType[i]->setValue((int)EnvelopeType::ADSR);
+		envAttack[i]->setValue(10);
+		envDecay[i]->setValue(50);
+		envSustain[i]->setValue(70);
+		envRelease[i]->setValue(100);
+	}
+
+	instVolume->setValue(100);
+	instQuantise->setValue(1);
+	instQuantise->setValue(0);
 }
 
 void ClientGUI::osc1WaveformChange(int v){
@@ -340,7 +363,9 @@ void ClientGUI::env2ReleaseChange(int v){
 }
 
 void ClientGUI::servScaleChange(int v){
-	switch((Notes)v){
+	scaleRoot = (Notes)v;
+
+	switch(scaleRoot){
 		case Notes::A :  servScale->setText("A"); break;
 		case Notes::As:  servScale->setText("A#"); break;
 		case Notes::B :  servScale->setText("B"); break;
@@ -356,7 +381,19 @@ void ClientGUI::servScaleChange(int v){
 		default: servScale->setText("unknown"); return;
 	}
 
-	emit notifyScaleChange(ScaleType::Pentatonic, (Notes)v);
+	emit notifyScaleChange(scaleType, scaleRoot);
+}
+void ClientGUI::servScaleTypeChange(int v){
+	scaleType = (ScaleType)v;
+
+	switch(scaleType){
+		case ScaleType::Major: servScaleType->setText("Major"); break;
+		case ScaleType::Minor: servScaleType->setText("Minor"); break;
+		case ScaleType::Pentatonic: servScaleType->setText("Pentatonic"); break;
+		default: servScaleType->setText("unknown"); return;
+	}
+
+	emit notifyScaleChange(scaleType, scaleRoot);
 }
 void ClientGUI::servTempoChange(int v){
 	servTempo->setText(QString("%1bps").arg(v));
