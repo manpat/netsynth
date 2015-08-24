@@ -14,6 +14,10 @@ Instrument::~Instrument(){
 		channel->stop();
 		channel = nullptr;
 	}
+	if(reverb){
+		reverb->release();
+		reverb = nullptr;
+	}
 	if(dsp){
 		dsp->release();
 		dsp = nullptr;
@@ -97,6 +101,9 @@ void Instrument::SetParameter(Parameters p, f32 v, bool s){
 
 	case Parameters::Volume:
 		volume = v;
+		break;
+	case Parameters::Reverb:
+		reverb->setParameterFloat(FMOD_DSP_SFXREVERB_DECAYTIME, v);
 		break;
 
 	default:

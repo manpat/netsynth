@@ -48,14 +48,14 @@ enum class Notes : u8 {
 
 enum class Parameters : u8{
 	// Mode
-	Waveform,
+	Waveform = 0,
 	EnvelopeType,
 
 	// Inst mode
 	Quantisation,
 
 	// Param
-	OctaveShift,
+	OctaveShift = 0, // Starting again means we get more parameters
 	Detune,
 	PulseWidth,
 	Attack,
@@ -65,6 +65,7 @@ enum class Parameters : u8{
 
 	// Inst param
 	Volume,
+	Reverb,
 
 	// Server param
 	Tempo,

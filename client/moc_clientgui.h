@@ -32,6 +32,7 @@ public:
 
 	DiscreteDial* instQuantise;
 	AnalogDial* instVolume;
+	AnalogDial* instReverb;
 
 	DiscreteDial* servScale;
 	DiscreteDial* servScaleType;
@@ -71,6 +72,7 @@ public slots:
 
 	void instQuantiseChange(int);
 	void instVolumeChange(int);
+	void instReverbChange(int);
 
 signals:
 	void notifyNoteChange(s8 degree, s8 octave, u8 state);

@@ -19,6 +19,8 @@ struct Instrument {
 	FMOD::Channel* channel;
 	FMOD::DSP* dsp;
 	NoteScheduler* scheduler;
+	
+	FMOD::DSP* reverb;
 
 	~Instrument();
 

@@ -25,9 +25,11 @@ Instrument* InstrumentManager::NewInstrument(u32 id){
 	desc.userdata = inst;
 
 	cfmod(fmod->createDSP(&desc, &inst->dsp));
+	cfmod(fmod->createDSPByType(FMOD_DSP_TYPE_SFXREVERB, &inst->reverb));
 	cfmod(inst->dsp->setChannelFormat(FMOD_CHANNELMASK_MONO, 1, FMOD_SPEAKERMODE_MONO));
 
 	cfmod(fmod->playDSP(inst->dsp, fmodManager->getMasterChannelGroup(), false, &inst->channel));
+	cfmod(inst->channel->addDSP(0, inst->reverb));
 	////// END DSP
 
 	inst->scheduler = new NoteScheduler();

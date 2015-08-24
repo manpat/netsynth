@@ -117,6 +117,7 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 		auto set = new QHBoxLayout();
 		{
 			auto box = new QVBoxLayout();
+			auto volRevBox = new QHBoxLayout();
 			instQuantise = new DiscreteDial();
 			instQuantise->setColor("#dd3");
 			instQuantise->setName("Quantisation");
@@ -125,8 +126,15 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			instVolume = new AnalogDial();
 			instVolume->setName("Volume");
 
+			instReverb = new AnalogDial();
+			instReverb->setName("Reverb");
+			instReverb->setRange(0, 20000);
+
+			volRevBox->addWidget(instVolume);
+			volRevBox->addWidget(instReverb);
+
 			box->addWidget(instQuantise);
-			box->addWidget(instVolume);
+			box->addLayout(volRevBox);
 
 			auto oscbox = new QGroupBox("Instrument");
 			oscbox->setStyleSheet("QGroupBox::title { subcontrol-position: hcenter; }");
@@ -135,6 +143,7 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 
 			connect(instQuantise, SIGNAL(valueChanged(int)), this, SLOT(instQuantiseChange(int)));
 			connect(instVolume, SIGNAL(valueChanged(int)), this, SLOT(instVolumeChange(int)));
+			connect(instReverb, SIGNAL(valueChanged(int)), this, SLOT(instReverbChange(int)));
 		}
 
 		{
@@ -170,6 +179,8 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 
 			servScale->setValue((int)Notes::B);
 			servScale->setValue((int)Notes::A);
+			servScaleType->setValue((int)ScaleType::Minor);
+			servScaleType->setValue((int)ScaleType::Major);
 			servTempo->setValue(60);
 		}
 
@@ -240,6 +251,8 @@ void ClientGUI::SetDefaults(){
 	instVolume->setValue(100);
 	instQuantise->setValue(1);
 	instQuantise->setValue(0);
+	instReverb->setValue(1);
+	instReverb->setValue(0);
 	
 	oscWaveforms[0]->setValue(1);
 	oscWaveforms[1]->setValue(1);
@@ -499,4 +512,8 @@ void ClientGUI::instQuantiseChange(int v){
 void ClientGUI::instVolumeChange(int v){
 	instVolume->setText(QString("%1%").arg(v));
 	emit notifyParamChange(Parameters::Volume, false, v/100.f);
+}
+void ClientGUI::instReverbChange(int v){
+	instReverb->setText(QString("%1s").arg(v/1000.0));
+	emit notifyParamChange(Parameters::Reverb, false, v*1.0f);
 }
