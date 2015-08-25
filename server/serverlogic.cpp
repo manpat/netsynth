@@ -7,6 +7,8 @@
 
 #include <cassert>
 
+#include <QtCore/QDebug>
+
 Scale ServerLogic::scale;
 f32 ServerLogic::tempo = 60.0;
 
@@ -57,19 +59,36 @@ void ServerLogic::HandleData(QByteArray data, u32 id) {
 		auto type = *reinterpret_cast<const PacketType*>((const char*)data);
 		auto param = (Parameters)type.param;
 
-		if(type.packetType == 0){ // Note on/off
-			assert(data.size() >= (s32)sizeof(PacketNote));
-			auto packet = reinterpret_cast<const PacketNote*>((const char*)data);
-			auto note = scale.GetNote(packet->degree, packet->octave);
+		if(type.packetType == 0){ 
+			if (type.secondary == 0) { // Note on/off
+				assert(data.size() >= (s32)sizeof(PacketNote));
+				auto packet = reinterpret_cast<const PacketNote*>((const char*)data);
+				auto note = scale.GetNote(packet->degree, packet->octave);
 
-			if(packet->state){
-				inst->scheduler->NoteOn(note);
-			}else{
-				inst->scheduler->NoteOff(note);
+				if (packet->state) {
+					inst->scheduler->NoteOn(note);
+				}
+				else {
+					inst->scheduler->NoteOff(note);
+				}
+
+				data.remove(0, sizeof(PacketNote));
 			}
+			else if (type.secondary == 1) {
+				assert(data.size() >= (s32)sizeof(PacketUserData));
+				auto packet = reinterpret_cast<const PacketUserData*>((const char*)data);
 
-			data.remove(0, sizeof(PacketNote));
+				// Server crashes here, access violation trying to access nick from packet
 
+				//auto nick = packet->nick;
+				//
+				//if (nick.size() > 0)
+				//{
+				//	serverGUI->UpdateSliderText(id, nick);
+				//}
+
+				data.remove(0, sizeof(PacketUserData));
+			}
 		}else if(type.packetType == 1){ // Set scale
 			assert(data.size() >= (s32)sizeof(PacketScale));
 			auto packet = reinterpret_cast<const PacketScale*>((const char*)data);
@@ -103,6 +122,6 @@ void ServerLogic::HandleData(QByteArray data, u32 id) {
 
 void ServerLogic::UpdateVisualizer() {
 	for (auto i : instrumentManager->clientInstruments) {
-		serverGUI->UpdateSlider(i.first, (int)(std::log(i.second->currentAmplitude+1.0)/2.0*100));
+		serverGUI->UpdateSliderValue(i.first, (int)(std::log(i.second->currentAmplitude+1.0)/2.0*100));
 	}
 }

@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "typedefinitions.h"
+#include <QtCore/QByteArray>
 
 #pragma pack(push, 1)
 
@@ -10,6 +11,10 @@ struct PacketNote : PacketType {
 	s8 degree;
 	s8 octave;
 	u8 state;
+};
+
+struct PacketUserData : PacketType {
+	QByteArray nick;
 };
 
 struct PacketParamConfig : PacketType {

@@ -16,7 +16,8 @@ public:
 
 	ServerGUI(QWidget* = nullptr);
 
-	void UpdateSlider(u32 id, u32 val);
+	void UpdateSliderText(u32 id, QString text);
+	void UpdateSliderValue(u32 id, u32 val);
 
 private slots:
 	void AddSlider(u32 id);

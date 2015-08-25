@@ -4,6 +4,14 @@
 #include <QtGui/QApplication>
 #include <QtNetwork/QHostAddress>
 
+#ifdef _WIN32
+#include <Windows.h>
+#include <lmcons.h>
+#else
+#include <unistd.h>
+#include <sys/types.h>
+#endif
+
 #include "moc_clientgui.h"
 #include "moc_connectdialog.h"
 #include "moc_clientnetwork.h"
@@ -49,9 +57,19 @@ void ClientLogic::requestConnect(const QString& ip){
 	}else{
 		qDebug() << "IP accepted";
 
+#ifdef _WIN32
+		char usr[UNLEN + 1];
+		DWORD usrlen = UNLEN + 1;
+		GetUserName(usr, &usrlen);
+		QString username = QString::fromLocal8Bit(usr);
+#else
+		uid_t usr = getuid();
+		QString username = QString::fromUtf16(usr);
+#endif
 		if(clientNetwork->connectToHost(ip)){
-			qDebug() << "Connected";
+			qDebug() << "Connected as" << qPrintable(username);
 			clientGUI->SetDefaults();
+			userDataChange(username);
 			emit connectResult(0);
 		}else{
 			qDebug() << "Failed";
@@ -69,6 +87,16 @@ void ClientLogic::noteChange(s8 degree, s8 octave, u8 state){
 	packet.degree = degree;
 	packet.octave = octave;
 	packet.state = state;
+
+	clientNetwork->writeData(packet);
+}
+void ClientLogic::userDataChange(const QString &text) {
+	PacketUserData packet;
+	packet.packetType = 0;
+	packet.secondary = 1;
+	packet.param = 0;
+
+	packet.nick = text.toUtf8();
 
 	clientNetwork->writeData(packet);
 }

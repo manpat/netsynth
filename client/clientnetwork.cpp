@@ -16,8 +16,21 @@ bool ClientNetwork::writeData(const PacketNote &packet) {
 	if (socket->state() == QAbstractSocket::ConnectedState) {
 		auto buf = QByteArray((const char*)&packet, sizeof(packet));
 		socket->write(buf);
+		socket->flush();
 		return socket->waitForBytesWritten();
 	} else {
+		return false;
+	}
+}
+
+bool ClientNetwork::writeData(const PacketUserData &packet) {
+	if (socket->state() == QAbstractSocket::ConnectedState) {
+		auto buf = QByteArray((const char*)&packet, sizeof(packet));
+		socket->write(buf);
+		socket->flush();
+		return socket->waitForBytesWritten();
+	}
+	else {
 		return false;
 	}
 }
@@ -26,6 +39,7 @@ bool ClientNetwork::writeData(const PacketModeConfig &packet) {
 	if (socket->state() == QAbstractSocket::ConnectedState) {
 		auto buf = QByteArray((const char*)&packet, sizeof(packet));
 		socket->write(buf);
+		socket->flush();
 		return socket->waitForBytesWritten();
 	} else {
 		return false;
@@ -36,6 +50,7 @@ bool ClientNetwork::writeData(const PacketParamConfig &packet) {
 	if (socket->state() == QAbstractSocket::ConnectedState) {
 		auto buf = QByteArray((const char*)&packet, sizeof(packet));
 		socket->write(buf);
+		socket->flush();
 		return socket->waitForBytesWritten();
 	} else {
 		return false;
@@ -46,6 +61,7 @@ bool ClientNetwork::writeData(const PacketScale &packet) {
 	if (socket->state() == QAbstractSocket::ConnectedState) {
 		auto buf = QByteArray((const char*)&packet, sizeof(packet));
 		socket->write(buf);
+		socket->flush();
 		return socket->waitForBytesWritten();
 	} else {
 		return false;

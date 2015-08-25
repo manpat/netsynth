@@ -29,14 +29,18 @@ void ServerGUI::AddSlider(u32 id) {
 	sliders[id]->setSliderPosition(0);
 	sliders[id]->setColor(QColor::fromHsv(rand() % 360, 196, 221));
 	
-	sliders[id]->setText(QString::number(id));
+	sliders[id]->setText("unnamed");
 
 	layout->addWidget(sliders[id]);
 
 	this->setLayout(layout);
 }
 
-void ServerGUI::UpdateSlider(u32 id, u32 val) {
+void ServerGUI::UpdateSliderText(u32 id, QString text) {
+	sliders[id]->setText(text);
+}
+
+void ServerGUI::UpdateSliderValue(u32 id, u32 val) {
 	sliders[id]->setSliderPosition(val);
 }
 

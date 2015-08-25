@@ -13,12 +13,10 @@ ServerNetwork::ServerNetwork(QObject *parent) : QObject(parent) {
 	connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
 	server->listen(QHostAddress::Any, 1337);
 
-	qDebug() << "Listening on:";
-
 	for(auto i : QNetworkInterface::allAddresses()) {
 		if (i.protocol() == QAbstractSocket::IPv4Protocol && i != QHostAddress(QHostAddress::LocalHost))
 			if(i.toString().contains("192.168") || i.toString().contains("10.") || i.toString().contains("172"))
-			qDebug() << qPrintable(i.toString());
+			qDebug() << "Listening on:" << qPrintable(i.toString());
 	}
 }
 
@@ -35,7 +33,7 @@ void ServerNetwork::newConnection() {
 		QByteArray *buffer = new QByteArray();
 		buffers.insert(socket, buffer);
 
-		qDebug().nospace() << "Connected:    Instrument #" << clientId << " (" << ((socket->peerName().isEmpty()) ? "unnamed" : qPrintable(socket->peerName())) << ") at " << qPrintable(socket->peerAddress().toString()) << ":" << socket->peerPort();
+		qDebug().nospace() << "Connected:    Instrument #" << clientId << " at " << qPrintable(socket->peerAddress().toString()) << ":" << socket->peerPort();
 	}
 }
 
@@ -46,7 +44,7 @@ void ServerNetwork::disconnected() {
 
 	emit ClientDisconnect(clientId);
 
-	qDebug().nospace() << "Disconnected: Instrument #" << clientId << " (" << ((socket->peerName().isEmpty()) ? "unnamed" : qPrintable(socket->peerName())) << ") at " << qPrintable(socket->peerAddress().toString()) << ":" << socket->peerPort();
+	qDebug().nospace() << "Disconnected: Instrument #" << clientId << " at " << qPrintable(socket->peerAddress().toString()) << ":" << socket->peerPort();
 
 	clientManager->RemoveClient(socket);
 	socket->deleteLater();

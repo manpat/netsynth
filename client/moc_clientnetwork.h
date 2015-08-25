@@ -14,6 +14,7 @@ public:
 public slots:
 	bool connectToHost(QString host);
 	bool writeData(const PacketNote &packet);
+	bool writeData(const PacketUserData &packet);
 	bool writeData(const PacketModeConfig &packet);
 	bool writeData(const PacketParamConfig &packet);
 	bool writeData(const PacketScale &packet);
