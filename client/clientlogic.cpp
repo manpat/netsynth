@@ -11,7 +11,7 @@
 
 ClientLogic::ClientLogic(){
 	clientGUI = new ClientGUI();
-	clientGUI->setWindowTitle("Client");
+	clientGUI->setWindowTitle("NetSynth Client");
 	clientGUI->resize(800, 400);
 	clientGUI->show();
 

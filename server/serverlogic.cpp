@@ -12,7 +12,7 @@ f32 ServerLogic::tempo = 60.0;
 
 ServerLogic::ServerLogic(){
 	serverGUI = new ServerGUI();
-	serverGUI->setWindowTitle("Server");
+	serverGUI->setWindowTitle("NetSynth Server");
 	serverGUI->resize(800, 400);
 	serverGUI->show();
 

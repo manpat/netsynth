@@ -41,7 +41,7 @@ void BaseDial::DrawText(QPainter* p, const QRect& r){
 	p->setPen(color);
 
 	auto textRect = r.adjusted(30, 20,-30,-20);
-	font.setWeight(QFont::Bold);
+	font.setWeight(QFont::Normal);
 	adaptFontSize(p, font, textRect, text);
 	p->setFont(font);
 	p->drawText(textRect, Qt::AlignCenter, text);
