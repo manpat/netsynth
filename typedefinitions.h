@@ -13,7 +13,7 @@ enum class EnvelopeType : u8 {
 };
 
 enum class OscillatorWaveform : u8 {
-	None = 0, Sine, Square, Triangle, Saw,
+	None = 0, Sine, Triangle, Square, Saw,
 	Count,
 };
 
