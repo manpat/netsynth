@@ -77,10 +77,10 @@ void ServerLogic::HandleData(QByteArray data, u32 id) {
 			else if (type.secondary == 1) {
 				assert(data.size() >= (s32)sizeof(PacketUserData));
 				auto packet = reinterpret_cast<const PacketUserData*>((const char*)data);
+				auto size = std::min((u8)sizeof(packet->nick), packet->size);
 
 				if (packet->size > 0){
-					auto nick = QString::fromAscii(packet->nick, packet->size);
-					qDebug() << "Server nick set" << nick;
+					auto nick = QString::fromAscii(packet->nick, size);
 					serverGUI->UpdateSliderText(id, nick);
 				}
 

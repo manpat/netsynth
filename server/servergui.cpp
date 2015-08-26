@@ -2,7 +2,6 @@
 #include "visualizationslider.h"
 
 #include <QtGui/QHBoxLayout>
-#include <QtCore/QDebug>
 
 #ifdef _WIN32
 #include <time.h>
@@ -12,7 +11,7 @@ ServerGUI::ServerGUI(QWidget* p) : QWidget(p) {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	
 #ifdef _WIN32
-	srand(time(NULL));
+	srand(time(nullptr));
 #endif
 
 	layout = new QHBoxLayout();

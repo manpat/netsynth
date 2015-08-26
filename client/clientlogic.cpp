@@ -97,7 +97,7 @@ void ClientLogic::userDataChange(const QString &text) {
 	packet.param = 0;
 
 	auto nick = text.toAscii();
-	packet.size = std::min(32, nick.size());
+	packet.size = std::min((int)sizeof(packet.nick), nick.size());
 	memcpy(packet.nick, nick.data(), packet.size);
 
 	clientNetwork->writeData(packet);
