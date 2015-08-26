@@ -7,6 +7,7 @@
 #ifdef _WIN32
 #include <Windows.h>
 #include <lmcons.h>
+#undef min
 #else
 #include <unistd.h>
 #include <sys/types.h>
