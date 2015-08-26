@@ -9,8 +9,8 @@ class VisualizationSlider : public QSlider {
 public:
 	VisualizationSlider(QWidget* parent = nullptr);
 
-	void setColor(const QColor& c) { color = c; }
-	void setText(const QString& t) { text = t; }
+	void setColor(const QColor& c) { color = c; update(); }
+	void setText(const QString& t) { text = t; update(); }
 
 protected:
 	QColor color;

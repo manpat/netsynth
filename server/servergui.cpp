@@ -2,6 +2,7 @@
 #include "visualizationslider.h"
 
 #include <QtGui/QHBoxLayout>
+#include <QtCore/QDebug>
 
 #ifdef _WIN32
 #include <time.h>

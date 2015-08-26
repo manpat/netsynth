@@ -63,8 +63,8 @@ void ClientLogic::requestConnect(const QString& ip){
 		GetUserName(usr, &usrlen);
 		QString username = QString::fromLocal8Bit(usr);
 #else
-		uid_t usr = getuid();
-		QString username = QString::fromUtf16(usr);
+		auto usr = cuserid(nullptr);
+		QString username = QString::fromUtf8(usr);
 #endif
 		if(clientNetwork->connectToHost(ip)){
 			qDebug() << "Connected as" << qPrintable(username);
@@ -96,7 +96,9 @@ void ClientLogic::userDataChange(const QString &text) {
 	packet.secondary = 1;
 	packet.param = 0;
 
-	packet.nick = text.toUtf8();
+	auto nick = text.toAscii();
+	packet.size = std::min(32, nick.size());
+	memcpy(packet.nick, nick.data(), packet.size);
 
 	clientNetwork->writeData(packet);
 }

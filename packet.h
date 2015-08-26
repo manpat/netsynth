@@ -14,7 +14,8 @@ struct PacketNote : PacketType {
 };
 
 struct PacketUserData : PacketType {
-	QByteArray nick;
+	u8 size;
+	char nick[32];
 };
 
 struct PacketParamConfig : PacketType {

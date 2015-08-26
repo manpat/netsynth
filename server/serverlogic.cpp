@@ -78,14 +78,11 @@ void ServerLogic::HandleData(QByteArray data, u32 id) {
 				assert(data.size() >= (s32)sizeof(PacketUserData));
 				auto packet = reinterpret_cast<const PacketUserData*>((const char*)data);
 
-				// Server crashes here, access violation trying to access nick from packet
-
-				//auto nick = packet->nick;
-				//
-				//if (nick.size() > 0)
-				//{
-				//	serverGUI->UpdateSliderText(id, nick);
-				//}
+				if (packet->size > 0){
+					auto nick = QString::fromAscii(packet->nick, packet->size);
+					qDebug() << "Server nick set" << nick;
+					serverGUI->UpdateSliderText(id, nick);
+				}
 
 				data.remove(0, sizeof(PacketUserData));
 			}
