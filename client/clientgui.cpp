@@ -36,7 +36,7 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 			oscWaveforms[i]->setName("Waveform");
 
 			oscOctave[i] = new DiscreteDial();
-			oscOctave[i]->setRange(-2, 2);
+			oscOctave[i]->setRange(-1, 1);
 			oscOctave[i]->setName("Octave");
 
 			oscDetune[i] = new AnalogDial();
@@ -49,7 +49,7 @@ ClientGUI::ClientGUI(QWidget* p): QTabWidget(p){
 
 			box->addWidget(oscWaveforms[i]);
 			box->addWidget(oscOctave[i]);
-			box->addWidget(oscDetune[i]);
+			// box->addWidget(oscDetune[i]);
 			box->addWidget(oscPulseWidth[i]);
 
 			connect(oscWaveforms[i], SIGNAL(valueChanged(int)), this, ARGSLOT(osc%1WaveformChange(int), i+1)), Qt::QueuedConnection);
