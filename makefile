@@ -27,7 +27,7 @@ checkdirs:
 	@if [ ! -d server ]; then mkdir server; fi
 	@if [ ! -d client ]; then mkdir client; fi
 
-$(PREFIX)/main.o: main.cpp app.h
+$(PREFIX)/main.o: main.cpp app.h stylesheet.h
 	@echo "-- Generating $(PREFIX) main --"
 	@g++ $(SRCFLAGS) -c main.cpp -o $@
 
