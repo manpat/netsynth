@@ -1,62 +1,44 @@
-Collaborative Music Thing
-=========================
+# NetSynth
+---
 
-What is it?
------------
-The collaborative music thing will comprise of a server - for synthesizing, and synchronising music; and a client - for collecting input from a user and for configuring and controlling the server. Each client will represent one 'instrument' - an instrument being a collection of oscillator, envelope, and effect settings. The client/server architecture will be designed with the assumption that it will only be used over LAN. This way, we can focus on one-way communication from client to server and we can make assumptions about latency that otherwise would pose problems.
+## What is it?
 
-Depends on
---------------------------
-- Fmod
-- QT
+NetSynth is a simplified synthisizer designed to play music over a network.
 
-Things we need
---------------
-- Client-side
-    - GUI
-        Methods to configure various stages of an instrument (oscillator/envelope/effect) + something for visual feedback, so that it isn't just knobs and buttons.
-    - Input
-    - Networking system
-        For sending configuration and note on/off packets to the server
+## How do I even?
 
-- Server-side
-    - Networking system
-        For recieving configuration and note packets from clients
-    - Synthesis pipeline
+The program comes with two executables, Client and Server, the server can be run on a single computer, and anyone with the Client can connect to it.
 
+### Connecting
 
-Instruments
------------
-- Can be monophonic (single-note, arpegiated chords) or polyphonic (chords)
-    - Polyphonic instruments will require one oscillator/envelope pair per voice
-    - Single-note monophic instruments have to deal with multiple keys still
-        How are new presses handled
-        - Stack-like: Last note played is note voiced, previous notes are re-voiced on key release
-        - Scan from right: Always play the highest note
-Stages:
-- Input
-    - Note priority
-    - Arpeggiation
-    - Chordiator?
-- Oscillator
-    - Frequency (tied to key)
-        - FM / WoW
-    - Waveform
-        - Pulse width/Duty cycle
-- Envelope
-    - Attack/Decay/Sustain (tied to key)/Release
-    - Amplitude/Volume
-        - AM / tremolo
-    - Trigger/Legato
-        Is the envelope started again if a new key is hit?
-        Or does the new note start where the last left off
-- Effects
-    - Reverb !
-    - Delay
-    - Chorus
-    - Flanger
-- Compressor
+The server can accept clients from anywhere:
 
-Idea
-----
-- If scale degrees are sent to the server instead of notes then scales can be set/changed globally
+- Your own computer (127.0.0.1)
+- Any computers on the network (Using an internal IP)
+- Any computers over the internet (Using an external IP)
+
+### Playing
+
+Use the letters on your keyboard to play notes. Your home row plays notes from the selected octave, the top row plays an octave higher, and the bottom row plays an octave lower.
+
+## Requirements
+Windows  
+[Visual C++ 2013 Runtime](https://www.microsoft.com/en-au/download/details.aspx?id=40784 "Visual C++ 2013 Runtime Download")
+
+## Licensing
+
+### NetSynth
+
+The MIT License (MIT)
+
+Copyright (c) 2015 Pat Monaghan, Jared Ford
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+### FMOD
+
+FMOD Sound System, copyright © Firelight Technologies Pty, Ltd., 1994-2015.
