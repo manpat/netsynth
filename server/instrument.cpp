@@ -26,12 +26,21 @@ Instrument::~Instrument(){
 
 // Returns frequency of note offset from A
 f64 ntof(u8 n){
-	return 220.0 * std::pow(2.0, ((s32)n-128)/12.0);
+	f64 offset = 0.0;
+
+	if(n & 1<<6u) {
+		offset = -12.0 + 0.5;
+	}else if(n & 1<<7u) {
+		offset = 12.0 - 0.5;
+	}
+
+	n &= ~(3<<6u);
+
+	return 220.0 * std::pow(2.0, ((s32)n-(s32)Notes::A + offset)/12.0);
 }
 
 f32 Instrument::Generate(f64 dt){
-	if (!scheduler)
-	{
+	if (!scheduler) {
 		return 0.0f;
 	}
 	scheduler->Update(phase);

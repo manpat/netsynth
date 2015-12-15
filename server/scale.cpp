@@ -54,6 +54,11 @@ void Scale::ConstructScale(Notes nroot, ScaleType type){
 u8 Scale::GetNote(s8 degree, s8 octave){
 	if(!degrees) throw "GetNote on uninitialised scale";
 
+	u8 flags = 0;
+
+	if(octave == -1) flags |= (1<<7u);
+	if(octave == 1) flags |= (1<<6u);
+
 	while(degree < 0){
 		degree += count;
 		--octave;
@@ -63,5 +68,5 @@ u8 Scale::GetNote(s8 degree, s8 octave){
 		++octave;
 	}
 
-	return degrees[degree] + octave*12;
+	return (degrees[degree] + octave*12) | flags;
 }

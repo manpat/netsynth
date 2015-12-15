@@ -40,7 +40,7 @@ enum class QuantisationSetting : u8 {
 };
 
 enum class Notes : u8 {
-	A = 128, As, B, C, Cs, 
+	A = 32, As, B, C, Cs, 
 	D, Ds, E, F, Fs, G, Gs,
 
 	Count = (Gs+1)-A,
