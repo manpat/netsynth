@@ -1,3 +1,5 @@
+package/
+
 *.o
 *.so*
 build

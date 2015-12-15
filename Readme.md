@@ -16,6 +16,7 @@ The server can accept clients from anywhere:
 - Your own computer (127.0.0.1)
 - Any computers on the network (Using an internal IP)
 - Any computers over the internet (Using an external IP)
+	- Note that NetSynth wasn't designed to be used over internet and as such, clients do not produce audio.
 
 ### Playing
 

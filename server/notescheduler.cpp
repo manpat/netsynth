@@ -36,7 +36,7 @@ void NoteScheduler::NoteOn(u8 note, f32 offset){
 	default: break;
 	}
 
-	notes.push_back(NoteInfo{begin, -1.0f, note, 0x3 /* Two envelopes */});
+	notes.push_back(NoteInfo{begin, -1.0f, note, (1<<2)-1 /* Two envelopes */});
 }
 
 void NoteScheduler::NoteOff(u8 note){

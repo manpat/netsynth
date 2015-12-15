@@ -15,7 +15,7 @@ ServerNetwork::ServerNetwork(QObject *parent) : QObject(parent) {
 
 	for(auto i : QNetworkInterface::allAddresses()) {
 		if (i.protocol() == QAbstractSocket::IPv4Protocol && i != QHostAddress(QHostAddress::LocalHost))
-			if(i.toString().contains("192.168") || i.toString().contains("10.") || i.toString().contains("172"))
+			// if(i.toString().contains("192.168") || i.toString().contains("10.") || i.toString().contains("172"))
 			qDebug() << "Listening on:" << qPrintable(i.toString());
 	}
 }

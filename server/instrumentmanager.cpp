@@ -30,8 +30,8 @@ Instrument* InstrumentManager::NewInstrument(u32 id){
 	cfmod(fmod->playDSP(inst->dsp, fmodManager->getMasterChannelGroup(), false, &inst->channel));
 
 	cfmod(fmod->createDSPByType(FMOD_DSP_TYPE_SFXREVERB, &inst->reverb));
-	inst->reverb->setParameterFloat(FMOD_DSP_SFXREVERB_DRYLEVEL, -80.0);
-	inst->reverb->setParameterFloat(FMOD_DSP_SFXREVERB_WETLEVEL, 0.0);
+	// inst->reverb->setParameterFloat(FMOD_DSP_SFXREVERB_DRYLEVEL, -80.0);
+	// inst->reverb->setParameterFloat(FMOD_DSP_SFXREVERB_WETLEVEL, 0.0);
 	cfmod(inst->channel->addDSP(0, inst->reverb));
 	////// END DSP
 
