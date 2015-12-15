@@ -29,9 +29,9 @@ f64 ntof(u8 n){
 	f64 offset = 0.0;
 
 	if(n & 1<<6u) {
-		offset = -12.0 + 0.25;
+		offset = -12.0 + 0.333;
 	}else if(n & 1<<7u) {
-		offset = 12.0 - 0.25;
+		offset = 12.0 - 0.333;
 	}
 
 	n &= ~(3<<6u);
