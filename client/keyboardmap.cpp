@@ -21,6 +21,7 @@ KeyboardMap::KeyboardMap() {
 	map.insert(std::make_pair(Qt::Key_J, std::make_pair(6, 0))); // J
 	map.insert(std::make_pair(Qt::Key_K, std::make_pair(7, 0))); // K
 	map.insert(std::make_pair(Qt::Key_L, std::make_pair(8, 0))); // L
+	map.insert(std::make_pair(Qt::Key_Semicolon, std::make_pair(9, 0))); // ;
 
 	map.insert(std::make_pair(Qt::Key_Z, std::make_pair(0, -1))); // Z
 	map.insert(std::make_pair(Qt::Key_X, std::make_pair(1, -1))); // X
@@ -29,6 +30,9 @@ KeyboardMap::KeyboardMap() {
 	map.insert(std::make_pair(Qt::Key_B, std::make_pair(4, -1))); // B
 	map.insert(std::make_pair(Qt::Key_N, std::make_pair(5, -1))); // N
 	map.insert(std::make_pair(Qt::Key_M, std::make_pair(6, -1))); // M
+	map.insert(std::make_pair(Qt::Key_Comma, std::make_pair(7, -1))); // ,
+	map.insert(std::make_pair(Qt::Key_Period, std::make_pair(8, -1))); // .
+	map.insert(std::make_pair(Qt::Key_Slash, std::make_pair(9, -1))); // /
 }
 
 std::pair<s8, s8> KeyboardMap::FindNote(quint32 scancode) {
