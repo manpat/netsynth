@@ -29,9 +29,9 @@ f64 ntof(u8 n){
 	f64 offset = 0.0;
 
 	if(n & 1<<6u) {
-		offset = -12.0 + 0.5;
+		offset = -12.0 + 0.25;
 	}else if(n & 1<<7u) {
-		offset = 12.0 - 0.5;
+		offset = 12.0 - 0.25;
 	}
 
 	n &= ~(3<<6u);
@@ -113,6 +113,7 @@ void Instrument::SetParameter(Parameters p, f32 v, bool s){
 		break;
 	case Parameters::Reverb:
 		reverb->setParameterFloat(FMOD_DSP_SFXREVERB_DECAYTIME, v);
+		// reverb->setParameterFloat(FMOD_DSP_SFXREVERB_EARLYLATEMIX, 100.0);
 		break;
 
 	default:

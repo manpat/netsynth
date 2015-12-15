@@ -32,6 +32,17 @@ Instrument* InstrumentManager::NewInstrument(u32 id){
 	cfmod(fmod->createDSPByType(FMOD_DSP_TYPE_SFXREVERB, &inst->reverb));
 	// inst->reverb->setParameterFloat(FMOD_DSP_SFXREVERB_DRYLEVEL, -80.0);
 	// inst->reverb->setParameterFloat(FMOD_DSP_SFXREVERB_WETLEVEL, 0.0);
+	inst->reverb->setParameterFloat(FMOD_DSP_SFXREVERB_DRYLEVEL, -60.0);
+
+	// inst->reverb->setParameterFloat(FMOD_DSP_SFXREVERB_EARLYLATEMIX, 100.0);
+	inst->reverb->setParameterFloat(FMOD_DSP_SFXREVERB_DECAYTIME, 0.);
+	inst->reverb->setParameterFloat(FMOD_DSP_SFXREVERB_LATEDELAY, 10.);
+
+	inst->reverb->setParameterFloat(FMOD_DSP_SFXREVERB_DIFFUSION, 100.0);
+	inst->reverb->setParameterFloat(FMOD_DSP_SFXREVERB_DENSITY, 100.0);
+	// inst->reverb->setParameterFloat(FMOD_DSP_SFXREVERB_HFDECAYRATIO, 40.0);
+	// inst->reverb->setParameterFloat(FMOD_DSP_SFXREVERB_HIGHCUT, 1000.0);
+
 	cfmod(inst->channel->addDSP(0, inst->reverb));
 	////// END DSP
 
